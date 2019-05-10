@@ -44,7 +44,7 @@ Tutorial
 
 This Chapter we will go over the basics of setting up the server we need for our application. We'll get some tests, github versioning and branches, and deploy to GCP.
 
-**Part I** - Installation, basic server setup, creating tests and routes.
+**Part I** - Installation, basic server setup, deployment, creating tests and routes.
 
 **Part II** - Setting up your Twitter App OAuth.
 
@@ -137,6 +137,8 @@ $ npm install gitignore -g
 $ gitignore node
 ```
 
+That should create your `.gitignore` file. Then you can set up your repository.
+
 ```terminal
 $ git init
 $ git add README.md [this is optional]
@@ -145,12 +147,204 @@ $ git remote add origin https://github.com/joha0033/<your-repo-name>.git
 $ git push -u origin master
 ```
 
-That should create your `.gitignore` file.
+Golden. You're so great.
+
+### Part II - Testing your Project
+
+For testing we'll be using Mocha as the testing library and Chai as the assertion library.
+
+Mocha will be installed globally, and chai (plus chai-http for testing HTTP requests) will be a development dependency.
 
 
-### Part I - Testing your Project
+```terminal
+$ npm install -g mocha
+$ npm install chai chai-http --save-dev 
+```
 
-### Part I - Setting up your Twitter Login
+We need a directory/folder to store our tests, so we'll do that and create a simple test file.
+
+*while in your project's root directory... in terminal*
+
+```terminal
+$ mkdir test
+$ touch ./test/tests.js
+```
+
+Now, copy and paste this code into `tests.js`
+
+```javascript
+var chai = require('chai');
+var chaiHttp = require('chai-http');
+var server = require('../app');
+var should = chai.should();
+
+chai.use(chaiHttp);
+
+describe('/', () => {
+  it('should list a status of 200 on /', (done) => {
+    chai.request(server)
+      .get('/')
+      .end(function (err, res) {
+        res.should.have.status(200);
+        done();
+      });
+  });
+});
+
+// Testing user route, you can have multiple "it" blocks in one "describe"
+// You can also have nested "describe" blocks
+describe('Users', () => {
+  describe('route', () => {
+    it('should list a status of 200', (done) => {
+      chai.request(server)
+        .get('/users')
+        .end(function (err, res) {
+          res.should.have.status(200);
+          done();
+        });
+    });
+  });
+
+
+  it('should respond with text "respond with a resource"', (done) => {
+    chai.request(server)
+      .get('/users')
+      .end((err, res) => {
+        // want to see what you're testing?
+        console.log(res.text, "testing response!")
+        res.text.should.be.a('string')
+        res.text.should.equal('respond with a resource');
+        done();
+      });
+  });
+});
+```
+
+Go to your terminal and run mocha!
+
+```terminal
+$ mocha
+```
+
+You should see something like this... well, exactly like this.
+
+```terminal
+  /
+GET / 200 226.756 ms - 170
+    ✓ should list a status of 200 on / (281ms)
+
+  Users
+GET /users 200 1.098 ms - 23
+    ✓ should respond with text "respond with a resource"
+    route
+GET /users 200 0.517 ms - 23
+      ✓ should list a status of 200
+
+
+  3 passing (390ms)
+```
+
+If you'd like to see exactly what we are testing, go ahead and through a `console.log()` in a test.
+
+
+```javascript
+// example...
+  it('should respond with text "respond with a resource"', (done) => {
+    chai.request(server)
+      .get('/users')
+      .end(function (err, res) {
+        
+        // res.text.should.be.a('string')
+        // res.text.should.equal('respond with a resource');
+        done();
+      });
+  });
+});
+// ....
+```
+
+Ok, so our basic tests are complete, lets do some deploying.
+
+
+### Part III - Deploying your Project
+
+We should ahead and deploy so we have a URL for our project. We'll need it for creating a Twitter Developer application. 
+
+Here's where you can access [Google Cloud Platform](https://cloud.google.com/) and create an account if you don't have one.
+
+There's a few small steps once logged into the GCP console to complete to be able to use GCP for deployment.
+
+1. First we must create a project. 
+
+You'll just need a project name. It will take a short few minutes and once its finished up you can click the completed badge and you'll be directed to your app's dashboard.
+
+1. Enable App Engine for your project. 
+
+*We will do this through the command line, but this way we get the code we need to enter into the terminal.*
+
+- You'll see a Hamburger in the top left corner of your console. This will open a side menu. Scroll down and click App Engine under the Compute section and select Dashboard.
+- We're going to deploy through the command line, so get the gcloud SDK. There should be a link in the "Deploy via command line card".
+- once the SDK is setup we'll initialize the application. 
+
+```terminal 
+$ gclound init
+```
+
+You should see something like this... with more or less option. Select "Create a new config".
+
+```terminal
+Pick configuration to use:
+ [1] Re-initialize this configuration [chance-the-trainer-gcp-config] with new settings 
+ [2] Create a new configuration
+ [3] Switch to and re-initialize existing configuration: [default]
+ Please enter your numeric choice: 2
+
+ Enter configuration name. Names start with a lower case letter and 
+contain only lower case letters a-z, digits 0-9, and hyphens '-':  tweet-rocket-config
+Your current configuration has been set to: [tweet-rocket-config]
+
+Choose the account you would like to use to perform operations for 
+this configuration:
+ [1] [my email!]@gmail.com
+ [2] Log in with a new account
+Please enter your numeric choice: 1
+
+You are logged in as: [[me email!]@gmail.com].
+
+Pick cloud project to use: 
+ [1] ####-#######
+ [2] chance-#########
+ [3] tweet-rocket
+ Please enter numeric choice or text value (must exactly match list 
+item):  3
+
+Your current project has been set to: [tweet-rocket]. 
+```
+
+ok, that was easy... now lets setup an app.yaml file for the deployment configurations. It's very simple.
+
+```terminal
+$ echo "runtime:nodejs10" >> app.yaml
+```
+
+Great! Now lets deploy
+
+```terminal
+$ gcloud app deploy
+<!-- blah blah blah... -->
+Do you want to continue (Y/n)?  Y
+```
+
+It should do some stuff for a bit and things for a few minutes, then you'll have a URL!
+
+There's a command to open it in the browser!
+
+```terminal
+$ gcloud app browse
+```
+Holy shit, we're live.
+
+### Part IV - Setting up your Twitter Login
 
 We need a Twitter Developer Account, go [here](https://developer.twitter.com/en/apply-for-access.html)
 
