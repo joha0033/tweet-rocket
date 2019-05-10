@@ -255,12 +255,14 @@ Here's where you can access [Google Cloud Platform](https://cloud.google.com/) a
 There's a few small steps once logged into the GCP console to complete to be able to use GCP for deployment.
 
 1. First we must create a project. 
-- You'll just need a project name. It will take a short few minutes and once its finished up you can click the completed badge and you'll be directed to your app's dashboard.
-1. Enable App Engine for your project. 
-*We will do this through the command line, but this way we get the code we need to enter into the terminal.*
-- You'll see a Hamburger in the top left corner of your console. This will open a side menu. Scroll down and click App Engine under the Compute section and select Dashboard.
-- We're going to deploy through the command line, so get the gcloud SDK. There should be a link in the "Deploy via command line card".
-- once the SDK is setup we'll initialize the application. 
+  - You'll just need a project name. It will take a short few minutes and once its finished up you can click the completed badge and you'll be directed to your app's dashboard.
+2. Enable App Engine for your project. 
+  
+  *We will do this through the command line, but this way we get the code we need to enter into the terminal.*
+  
+  - You'll see a Hamburger in the top left corner of your console. This will open a side menu. Scroll down and click App Engine under the Compute section and select Dashboard.
+  - We're going to deploy through the command line, so get the gcloud SDK. There should be a link in the "Deploy via command line card".
+  - once the SDK is setup we'll initialize the application. 
 
 ```terminal 
 $ gclound init
