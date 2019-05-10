@@ -42,11 +42,13 @@ Tutorial
 
 ## Chapter One
 
-This Chapter we will go over the basics of setting up the server we need for our application.
+This Chapter we will go over the basics of setting up the server we need for our application. We'll get some tests, github versioning and branches, and deploy to GCP.
 
-Part I - Installation, basic server setup, creating tests and routes.
-Part II - Setting up your Twitter App OAuth.
-Part III - Setting up a database with PostgresQL + Knex, testing your database.
+**Part I** - Installation, basic server setup, creating tests and routes.
+
+**Part II** - Setting up your Twitter App OAuth.
+
+**Part III** - Setting up a database with PostgresQL + Knex, testing your database.
 
 ### Part I - Installation
 
@@ -59,8 +61,6 @@ When developing, it's best to get familiar with docs. Below are some resources t
 - [About Node](https://nodejs.org/en/about/)
 - [Installing Node](https://nodejs.org/en/download/package-manager/)
 - [Guides on Node](https://nodejs.org/en/docs/guides/)
-
-
 - [About Express](https://expressjs.com/)
 - [Installing Express](https://expressjs.com/en/starter/installing.html)
 - [Guides on Express](https://nodejs.org/en/docs/guides/)
@@ -71,7 +71,7 @@ When developing, it's best to get familiar with docs. Below are some resources t
 - [Testing Node and Express](https://mherman.org/blog/testing-node-and-express/)
 - [Node, Passport, and Express](https://mherman.org/blog/node-passport-and-postgres/)
 
-Other things I'll be using: Nodemon, Passport, Passport-twitter, express-sessions
+Other things I'll be using: Nodemon, Passport, Passport-twitter, express-sessions, GCP, Github
 
 ### Part I - Setting Up your Project
 
