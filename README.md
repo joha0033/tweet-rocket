@@ -254,9 +254,12 @@ Here's where you can access [Google Cloud Platform](https://cloud.google.com/) a
 
 There's a few small steps once logged into the GCP console to complete to be able to use GCP for deployment.
 
+*You are able to create a project in the command line with the gcloud SDK while you're initializing gcloud for your application. Follow the next steps if you've never used GCP and you'll get a slight feel for the GUI console in the browser.*
+
 1. First we must create a project. 
 
     - You'll just need a project name. It will take a short few minutes and once its finished up you can click the completed badge and you'll be directed to your app's dashboard.
+      - *again you can do this in the console shortly.*
 
 2. Enable App Engine for your project. 
   
@@ -264,13 +267,20 @@ There's a few small steps once logged into the GCP console to complete to be abl
 
     - You'll see a Hamburger in the top left corner of your console. This will open a side menu. Scroll down and click App Engine under the Compute section and select Dashboard.
     - We're going to deploy through the command line, so get the gcloud SDK. There should be a link in the "Deploy via command line card".
-    - once the SDK is setup we'll initialize the application. 
+    - Once the SDK is setup we'll initialize the application. 
+
+While you're in your application's root directory, type the following command.
 
 ```terminal 
 $ gclound init
 ```
 
-You should see something like this... with more or less option. Select "Create a new config".
+The result should be something like this... with more or less options. 
+
+- Select "Create a new config".
+- Choose your account
+- Choose the project you just made in the browser in GCP
+ - If you didn't make a project, the option to create one here [last option #].
 
 ```terminal
 Pick configuration to use:
@@ -295,6 +305,7 @@ Pick cloud project to use:
  [1] ####-#######
  [2] chance-#########
  [3] tweet-rocket
+ [4] Create a new project
  Please enter numeric choice or text value (must exactly match list 
 item):  3
 
@@ -306,12 +317,11 @@ ok, that was easy... now lets setup an app.yaml file for the deployment configur
 ```terminal
 $ echo "runtime:nodejs10" >> app.yaml
 ```
-
-Great, now lets deploy!
+Done... Great, now lets deploy!
 
 ```terminal
 $ gcloud app deploy
-<!-- blah blah blah... -->
+<!-- blah blah blah... stuff. -->
 Do you want to continue (Y/n)?  Y
 ```
 
@@ -335,15 +345,27 @@ Then, Click ( Apply for a developer account ). Process is pretty painless and qu
 From your developer profile page, click 'Apps' in the top right corner. Then click 'Create App'. If that button is disabled, hard refresh your browser --[CMD+SHIFT+R]. You'll need to go through the process telling Tweitter what you're app is all about. A URL, callback URL, description, and how it will be used is the main information needed. Also, this app *WILL* be used to log into twitter, there's a check box for that.
 
 **Key info**
-- The app will be used to log into twitter
-- description of what the app does
-- description of how the app will be used
+- The app will be used to log into twitter, there's a checkbox for that.
+- Create a description of what the app does
+- Create a description of how the app will be used
 - App URL: https://<your-app-name>.appspot.com/
 - App URL Callback: https://<your-app-name>.appspot.com/twitter/callback
 
 That should do it. There may be extra steps in place since this post, just follow the best you can and get that app going!
 
-Next, we will 
+When your app is created, go to the Keys and Access Tokens, we'll need those later. 
+
+**DO NOT SHARE THESE || DO NOT PUBLISH THESE || DONT PUSH THEM TO GITHUB || use a .env file, we'll do that later.**
+
+Next, we will add some dependencies to our application that will allow us to log into twitter within our application.
+
+dependecies to install:  passport, passport-twitter, express-session, session-memory-store
+
+```terminal
+$ npm install --save passport passport-twitter express-session session-memory-store
+```
+
+Now we need to create a Passport.js Strategy for Twitter. A strategy is... brb...
 
 
 
