@@ -244,27 +244,7 @@ GET /users 200 0.517 ms - 23
   3 passing (390ms)
 ```
 
-If you'd like to see exactly what we are testing, go ahead and through a `console.log()` in a test.
-
-
-```javascript
-// example...
-  it('should respond with text "respond with a resource"', (done) => {
-    chai.request(server)
-      .get('/users')
-      .end(function (err, res) {
-        
-        // res.text.should.be.a('string')
-        // res.text.should.equal('respond with a resource');
-        done();
-      });
-  });
-});
-// ....
-```
-
 Ok, so our basic tests are complete, lets do some deploying.
-
 
 ### Part III - Deploying your Project
 
@@ -275,13 +255,9 @@ Here's where you can access [Google Cloud Platform](https://cloud.google.com/) a
 There's a few small steps once logged into the GCP console to complete to be able to use GCP for deployment.
 
 1. First we must create a project. 
-
-You'll just need a project name. It will take a short few minutes and once its finished up you can click the completed badge and you'll be directed to your app's dashboard.
-
+- You'll just need a project name. It will take a short few minutes and once its finished up you can click the completed badge and you'll be directed to your app's dashboard.
 1. Enable App Engine for your project. 
-
 *We will do this through the command line, but this way we get the code we need to enter into the terminal.*
-
 - You'll see a Hamburger in the top left corner of your console. This will open a side menu. Scroll down and click App Engine under the Compute section and select Dashboard.
 - We're going to deploy through the command line, so get the gcloud SDK. There should be a link in the "Deploy via command line card".
 - once the SDK is setup we'll initialize the application. 
@@ -327,7 +303,7 @@ ok, that was easy... now lets setup an app.yaml file for the deployment configur
 $ echo "runtime:nodejs10" >> app.yaml
 ```
 
-Great! Now lets deploy
+Great, now lets deploy!
 
 ```terminal
 $ gcloud app deploy
@@ -337,12 +313,14 @@ Do you want to continue (Y/n)?  Y
 
 It should do some stuff for a bit and things for a few minutes, then you'll have a URL!
 
-There's a command to open it in the browser!
+There's a command to open up your project in the browser! You can get the URL there.
 
 ```terminal
 $ gcloud app browse
 ```
 Holy shit, we're live.
+
+*save the appspot/gcloud URL, we're going to need that in a second. https://<your-app-name>.appspot.com/*
 
 ### Part IV - Setting up your Twitter Login
 
@@ -350,7 +328,18 @@ We need a Twitter Developer Account, go [here](https://developer.twitter.com/en/
 
 Then, Click ( Apply for a developer account ). Process is pretty painless and quick. Describe your app and verify your email.
 
-From your developer profile page, click 'Apps' in the top right corner. Then click 'Create App'. If that button is disabled, hard refresh your browser --[CMD+SHIFT+R].
+From your developer profile page, click 'Apps' in the top right corner. Then click 'Create App'. If that button is disabled, hard refresh your browser --[CMD+SHIFT+R]. You'll need to go through the process telling Tweitter what you're app is all about. A URL, callback URL, description, and how it will be used is the main information needed. Also, this app *WILL* be used to log into twitter, there's a check box for that.
+
+**Key info**
+- The app will be used to log into twitter
+- description of what the app does
+- description of how the app will be used
+- App URL: https://<your-app-name>.appspot.com/
+- App URL Callback: https://<your-app-name>.appspot.com/twitter/callback
+
+That should do it. There may be extra steps in place since this post, just follow the best you can and get that app going!
+
+Next, we will 
 
 
 
