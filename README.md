@@ -340,9 +340,9 @@ Holy shit, we're live.
 
 We need a Twitter Developer Account, go [here](https://developer.twitter.com/en/apply-for-access.html)
 
-Then, Click ( Apply for a developer account ). Process is pretty painless and quick. Describe your app and verify your email.
+Then, Click [ Apply for a developer account ]. Process is pretty painless and quick. Describe your app and verify your email.
 
-From your developer profile page, click 'Apps' in the top right corner. Then click 'Create App'. If that button is disabled, hard refresh your browser --[CMD+SHIFT+R]. You'll need to go through the process telling Tweitter what you're app is all about. A URL, callback URL, description, and how it will be used is the main information needed. Also, this app *WILL* be used to log into twitter, there's a check box for that.
+From your developer profile page, click 'Apps' in the top right corner. Then click 'Create App'. If that button is disabled, hard refresh your browser --[CMD+SHIFT+R]. Once you are redirected, you'll have to go through the form process telling Twitter what you're app is all about. A URL, callback URL, description, and how it will be used is the main information needed. Also, this app *WILL* be used to log into twitter, there's a check box for that.
 
 **Key info**
 - The app will be used to log into twitter, there's a checkbox for that.
@@ -355,17 +355,208 @@ That should do it. There may be extra steps in place since this post, just follo
 
 When your app is created, go to the Keys and Access Tokens, we'll need those later. 
 
-**DO NOT SHARE THESE || DO NOT PUBLISH THESE || DONT PUSH THEM TO GITHUB || use a .env file, we'll do that later.**
+**DO NOT SHARE THESE || DO NOT PUBLISH THESE || DONT PUSH THEM TO GITHUB**
+
+We'll use a .env file to hide them from the untrustworthy public scouring the inter-webs.
+
+```terminal
+$ echo "TWITTER_CONSUMER_KEY=[YOUR APP CONSUMER KEY]\nTWITTER_CONSUMER_SECRET=[YOUR APP CONSUMER SECRET]" >> .env
+```
+
+The .env file will be ignored when you push up to Github. Why? Because we tell Github to ignore it in our .gitignore file, go see for yourself.
 
 Next, we will add some dependencies to our application that will allow us to log into twitter within our application.
 
-dependecies to install:  passport, passport-twitter, express-session, session-memory-store
+Dependencies to install:  passport, passport-twitter, express-session, dotenv
 
 ```terminal
-$ npm install --save passport passport-twitter express-session session-memory-store
+$ npm install --save passport passport-twitter express-session dotenv
 ```
 
-Now we need to create a Passport.js Strategy for Twitter. A strategy is... brb...
+This is everything we need to create a basic passport session utilizing twitter credentials. The `passport` package abstracts some complex code like the HTTP request jargon, and `passport-twitter` gives us the ability to use a strategy that is twitter specific. If you wanted, say... Github login you'd use `passport-github` for implement your strategy. `express-sessions` allows for us to create a session for our user in the browser with ease. The `dotenv` dependency allows us to access the .env file variables by appending `process.env.[THE_VARIABLE_NAME]`
+
+Now we need to create a Passport.js Strategy for Twitter. A strategy is simply a way, or method, to login. You can have many strategies like a Facebook Strategy, Google Strategy, and any other major OAuth login providers. To do this, we'll have run the code snippet above to install our dependencies. 
+
+This is where we'll implement our strategy. To do so, lets start adding some code in app.js
+
+Lets use our new dependencies. Add these line to app.js, just after the original dependencies.
+
+```javascript
+// passport requirements
+require('dotenv').config()
+const session = require('express-session');
+const passport = require('passport');
+const TwitterStrategy = require('passport-twitter').Strategy;
+```
+
+Right under these dependencies add the following
+
+```javascript
+// secret keys for passport
+const consumerKey = process.env.TWITTER_CONSUMER_KEY
+const consumerSecret = process.env.TWITTER_CONSUMER_SECRET
+const callbackURL = process.env.TWITTER_CALLBACK_URL
+```
+You'll have to add TWITTER_CALLBACK_URL to your .env file. Its your apps URL plus, /twitter/callback, like we used before.
+
+To use passport and the Twitter strategy, add the following after the previous code.
+
+```javascript
+// using passport with Twitter Strategy
+passport.use(new TwitterStrategy({
+  consumerKey,
+  consumerSecret,
+  callbackURL
+}, (token, tokenSecret, profile, done) =>  done(null, profile)))
+
+passport.serializeUser(function(user, callback){
+  callback(null, user);
+});
+passport.deserializeUser(function(object, callback){
+  callback(null, object);
+});
+```
+
+directly under that code, use this.
+
+```javascript
+passport.serializeUser(function (user, callback) {
+  callback(null, user);
+});
+passport.deserializeUser(function (object, callback) {
+  callback(null, object);
+});
+```
+
+To create a session for the user, we'll initialize `express-session` like so. I would add this underneath the existing `app.use()` initializers.
+
+*I've also added SESSION_NAME and TWITTER_SESSION_SECRET to our .env file. they can be whatever you desire! a simple word is fine*
+
+```javascript
+// add session cofig
+app.use(session({
+  name: process.env.SESSION_NAME,
+  secret: process.env.TWITTER_SESSION_SECRET,
+  resave: true,
+  saveUninitialized: true,
+}));
+```
+
+Routes are very important, we'd have nothing with out them. Let's add them now underneath the previous code.
+
+```javascript
+// add routes
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.get('/', function (req, res) {
+  res.render('index', { user: req.user, title: "Tweet Rocket!" });
+});
+
+//Add twitter login and return methoods
+app.get('/twitter/login', passport.authenticate('twitter'));
+
+app.get('/twitter/callback',
+  passport.authenticate('twitter', { failureRedirect: '/' }),
+  function (req, res) {
+    res.redirect('/')
+  });
+
+app.get('/twitter/logout', function (req, res) {
+  req.session.destroy(function (err) {
+    res.redirect('/'); // Inside a callback… bulletproof!
+  });
+});
+```
+
+And that should do us for the login! Now this wont be easy to test locally. In fact, I'm going to skip that. 
+
+Go ahead and run this to see if there's any runtime errors.
+
+```terminal
+$ nodemon
+```
+
+Make sure everything is running ok.
+
+Now that the routes are there and our code runs without syntax errors, lets add a view for the user. This will be an extremely simple view for now, but we'll spruce it up once the heavy lifting is taken care of.
+
+Go to your views folder in your root directory. Open up `index.jade` and paste the following.
+
+```jade
+extends layout
+
+block content
+  .container
+    .row
+       .col-sm-12
+          table.table.table-hover
+            thead
+              tr
+                th 
+                  h1 #{title}
+            tbody
+              tr
+                td
+                   if user
+                    strong Welcome: 
+                    | #{user.displayName}
+                    br 
+                    strong Display Photo: 
+                    img(src="#{user.photos[0].value}", alt="")
+                    a(class ="btn btn-primary" href="/twitter/logout") 
+                      | Logout
+                   else
+                     a(class ="btn btn-primary" href="/twitter/login") 
+                      | Login With Twitter
+```
+
+Now open up layout.jade in the same directory and add the following
+
+```jade
+doctype html
+html
+  head
+    title= title
+    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous")
+
+    script(src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous")
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous")
+  body
+    block content
+```
+
+Save your work, test it locally (the Twitter login wont work) and make sure there's no syntax errors.
+
+Now lets deploy and login in with some twitter credentials!
+
+```terminal
+$ gcloud app deploy
+...stuff happens, it'll ask a question, select Y
+
+$ gcloud app browse
+```
+
+We should be live and logging in! If everything works, we should go ahead and push it up to github
+
+```terminal
+$ git add ./app.js
+$ git commit -m "basic passport + routes"
+$ git push origin master
+``` 
+
+Next we'll style our frontend, add some test to go red, then add functionality to go green.
+
+
+
+
+
+
+
+
+
+
 
 
 
