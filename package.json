@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "export NODE_ENV=production && node ./bin/www",
     "dev": "export NODE_ENV=development && nodemon",
     "test": "export NODE_ENV=test && ./node_modules/mocha/bin/_mocha"
   },
@@ -30,7 +30,6 @@
     "popper": "^1.0.1",
     "redis": "^2.8.0",
     "serve-favicon": "^2.4.5",
-    "session-memory-store": "^1.0.0",
     "sqlite3": "^4.0.8",
     "twit": "^2.2.11",
     "webpack": "^4.31.0"

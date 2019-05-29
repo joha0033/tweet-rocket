@@ -71,18 +71,19 @@ const formatAndSchedule = ({
 }
 
 router.post('/schedule', (req, res, next) => {
-  const tweet = req.body
-  queries.scheduleTweet(tweet).then((result, err) => {
-    if (err) {
-      console.log(err);
-
-      return res.redirect('/api/v1/twitter/profile')
-    }
-    const tweetData = result[0]
-    console.log('tweet saved:', tweetData)
-    formatAndSchedule(tweetData)
-    return res.redirect('/api/v1/twitter/profile')
-  })
+  const tweetData = req.body
+  formatAndSchedule(tweetData)
+  return res.redirect('/api/v1/twitter/profile')
+  // queries.scheduleTweet(tweet).then((result, err) => {
+  //   if (err) {
+  //     console.log(err);
+  //     return res.redirect('/api/v1/twitter/profile')
+  //   }
+  //   const tweetData = result[0]
+  //   console.log('tweet saved:', tweetData)
+  //   formatAndSchedule(tweetData)
+  //   return res.redirect('/api/v1/twitter/profile')
+  // })
 })
 
 module.exports = router

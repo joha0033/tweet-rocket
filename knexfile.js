@@ -33,7 +33,7 @@ module.exports = {
       host: process.env.DATABASE_URL
     },
     migrations: {
-      directory: './db/migrations'
+      directory: './db/migrations/production'
     },
     seeds: {
       directory: './db/seeds/production'

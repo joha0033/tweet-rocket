@@ -100,13 +100,13 @@ app.use(passport.session())
 app.use('/api/v1/tweets', tweets)
 app.use('/api/v1/twitter', users)
 
+
 app.get('/', function (req, res) {
-  const user = false
-  console.log('get route / in')
   process.env.NODE_ENV === 'development'
     ? res.render('index', { user, title: 'Tweet Rocket - development!' })
-    : res.render('index', { user: req.user, title: 'Tweet Rocket!' })
+    : res.render('index', { user: req.user, title: 'Tweet Rocket!!!' })
 })
+
 
 // Handle 404
 app.use(function (req, res) {
