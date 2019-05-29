@@ -6,6 +6,20 @@ const Twit = require('twit')
 const momentTimezone = require('moment-timezone')
 const moment = require('moment')
 
+// Node Schedule Syntax
+// *    *    *    *    *    *
+// ┬    ┬    ┬    ┬    ┬    ┬
+// │    │    │    │    │    │
+// │    │    │    │    │    └ day of week (0 - 7) (0 or 7 is Sun)
+// │    │    │    │    └───── month (1 - 12)
+// │    │    │    └────────── day of month (1 - 31)
+// │    │    └─────────────── hour (0 - 23)
+// │    └──────────────────── minute (0 - 59)
+// └───────────────────────── second (0 - 59, OPTIONAL)
+// var j = schedule.scheduleJob('42 * * * *', function () {
+//   console.log('The answer to life, the universe, and everything!')
+// })
+
 const tweetFactory = {
   formatDate: (time, date) => {
     const [hour, minute] = time.split(':')
@@ -13,11 +27,11 @@ const tweetFactory = {
     const theTimeToTweet = `00 ${minute} ${hour} ${day} ${month} ?`
     return theTimeToTweet
   },
-  scheduleTweet: (tweet, atThisTime, release) => {
+  scheduleThis: (tweet, atThisTime, thenRelease) => {
     please.scheduleJob(atThisTime, function () {
       // handle errors?
       console.log('The answer to life scheduling tweets!', tweet)
-      return release(tweet)
+      return thenRelease(tweet)
     })
   },
   releaseTweet: (tweet) => {
@@ -53,24 +67,22 @@ const formatAndSchedule = ({
     .formatDate(scheduled_time, scheduled_date)
 
   return tweetFactory
-    .scheduleTweet(tweet, formattedDate, tweetFactory.releaseTweet)
+    .scheduleThis(tweet, formattedDate, tweetFactory.releaseTweet)
 }
 
 router.post('/schedule', (req, res, next) => {
   const tweet = req.body
   queries.scheduleTweet(tweet).then((result, err) => {
+    if (err) {
+      console.log(err);
+
+      return res.redirect('/api/v1/twitter/profile')
+    }
     const tweetData = result[0]
     console.log('tweet saved:', tweetData)
     formatAndSchedule(tweetData)
     return res.redirect('/api/v1/twitter/profile')
   })
 })
-
-
-
-
-
-
-
 
 module.exports = router
