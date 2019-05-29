@@ -16,7 +16,7 @@ const bodyParser = require('body-parser')
 const Knex = require('knex');
 
 // passport requirements
-const session = require('express-session')
+// const session = require('express-session')
 const passport = require('passport')
 const TwitterStrategy = require('passport-twitter').Strategy
 
@@ -65,12 +65,20 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 
 // add session config
-app.use(session({
+// app.use(session({
+//   name: process.env.SESSION_NAME,
+//   secret: process.env.TWITTER_SESSION_SECRET,
+//   resave: true,
+//   saveUninitialized: true,
+// }))
+
+app.use(require('cookie-session')({
   name: process.env.SESSION_NAME,
-  secret: process.env.TWITTER_SESSION_SECRET,
-  resave: true,
-  saveUninitialized: true,
-}))
+  keys: process.env.TWITTER_SESSION_SECRET,
+
+  // Cookie Options
+  maxAge: 72 * 60 * 60 * 1000
+}));
 
 // secret keys for passport
 const consumerKey = process.env.TWITTER_CONSUMER_KEY
