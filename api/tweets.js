@@ -73,7 +73,7 @@ const formatAndSchedule = ({
 router.post('/schedule', (req, res, next) => {
   const tweetData = req.body
   formatAndSchedule(tweetData)
-  return res.redirect('/api/v1/twitter/profile')
+  return res.redirect('/')
   // queries.scheduleTweet(tweet).then((result, err) => {
   //   if (err) {
   //     console.log(err);
