@@ -1,0 +1,135 @@
+
+style(type='text/css').
+  main {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .date-time-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (max-width: 580px) { 
+    main {
+      display: grid;
+      grid-template-columns: 1fr 6fr 1fr;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    .date-time-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 375px) { 
+    main {
+      display: grid;
+      grid-template-columns: 1fr 6fr 1fr;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    .date-time-grid {
+      display: grid;
+      grid-template-columns: 0;
+    }
+  }
+
+
+script.
+  $( document ).ready(function() {
+
+
+    const todaysDate = () => {
+      var dtToday = new Date();
+      var month = dtToday.getMonth() + 1;
+      var day = dtToday.getDate();
+      var year = dtToday.getFullYear();
+      if(month < 10)
+          month = '0' + month.toString();
+      if(day < 10)
+          day = '0' + day.toString();
+      
+      var maxDate = year + '-' + month + '-' + day;
+      $('#tweet-date').attr('min', maxDate);
+      return maxDate
+    }
+
+    const today = (todaysDate)()
+    
+
+    $("#tweet-date").on('blur', function() {
+      if($('#tweet-date').val() <= todaysDate()){
+        var dtToday = new Date();
+        var hours = dtToday.getHours()
+        var minutes = dtToday.getMinutes()
+        if(minutes < 10)
+          minutes = '0' + minutes.toString();
+        var maxTime = hours + ':' + minutes
+        $('#tweet-time').attr('min', maxTime);
+      } else {
+        $('#tweet-time').attr('min', null);
+      }
+    })
+
+
+
+    $("#tweet-text").on('input', function(e) {
+      let chars = $(this).delay(1000).val().length
+      if (chars <= 140) {
+        $('#chars_left').text(140-chars).removeClass('text-danger')
+        $('#submit-button').removeClass('disabled')
+        $('#submit-button').prop('disabled',false)
+      } else {
+        $('#chars_left').text(chars).addClass('text-danger')
+        $('#submit-button').addClass('disabled')
+        $('#submit-button').prop('disabled',true)
+        console.log('over 140!!', chars)
+      }
+    })
+
+    //- $('#tweet-form')on('submit', (event) => {
+    //-   event.preventDefault()
+    //- })
+  })
+
+if user
+      main.container
+        div
+        div
+          h3.mt-4 Schedule a tweet   
+          form#tweet-form.form-grid(action='/api/v1/tweets/schedule', method='POST')
+            label text
+            textarea.form-control(rows="3" id="tweet-text" name="tweet" required)
+            span remaining: 
+            span#chars_left 140
+            br
+            div.date-time-grid
+              div.date
+                label date
+                br
+                input(type="date"  id="tweet-date" name ="scheduled_date" required)
+              div.time
+                label time
+                br
+                input(type="time"  id="tweet-time" name="scheduled_time" required)
+            br
+            input(novalidate id="tweet-id" name ="user_id" required hidden value="#{user.id}")
+            div
+              button.btn.btn-primary.mb-3#submit-button(type="submit") 
+                | Submit
+          div

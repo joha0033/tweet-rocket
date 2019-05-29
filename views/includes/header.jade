@@ -1,0 +1,21 @@
+header
+    div.row.m-0
+      div.col-2.pt-1(style={background: 'red'})
+      div.col-2.pt-1(style={background: 'green'})
+      div.col-2.pt-1(style={background: 'blue'})
+      div.col-2.pt-1(style={background: 'yellow'})
+      div.col-2.pt-1(style={background: 'purple'})
+      div.col-2.pt-1(style={background: 'orange'})
+    nav.navbar.navbar-dark.bg-dark
+      span.navbar-brand.h1.title.mb-0
+        | Welcome to #{title}
+        //- login + out button
+      if !user && process.env.NODE_ENV !== 'development'
+        a(class ="sub-title" href="/api/v1/twitter/login") 
+          | Login
+      if !user && process.env.NODE_ENV === 'development'
+        a(class ="sub-title" href="/api/v1/twitter/profile") 
+          | Login - Dev
+      if user
+        a(class ="sub-title" href="/api/v1/twitter/logout") 
+          | Logout #{user.displayName}

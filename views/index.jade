@@ -1,25 +1,22 @@
-extends layout
+doctype html
+html
+    include ./includes/init.jade
+        title= title
+    body
+        include ./includes/header.jade
 
-block content
-  .container
-    .row
-       .col-sm-12
-          table.table.table-hover
-            thead
-              tr
-                th 
-                  h1 #{title}
-            tbody
-              tr
-                td
-                   if user
-                    strong Welcome: 
-                    | #{user.displayName}
-                    br 
-                    strong Display Photo: 
-                    img(src="#{user.photos[0].value}", alt="")
-                    a(class ="btn btn-primary" href="/twitter/logout") 
-                      | Logout
-                   else
-                     a(class ="btn btn-primary" href="/twitter/login") 
-                      | Login With Twitter
+
+        include ./content/elements.jade
+        
+
+        include ./includes/footer.jade
+            //- block content
+
+        //- include ./includes/404.jade
+        //-     block content
+
+        //- include ./includes/500.jade
+        //-     block content
+            
+
+    

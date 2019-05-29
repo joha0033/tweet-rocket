@@ -1,0 +1,97 @@
+extends layout
+
+block content
+    div.row.m-0
+      div.col-2.pt-1(style={background: 'red'})
+      div.col-2.pt-1(style={background: 'green'})
+      div.col-2.pt-1(style={background: 'blue'})
+      div.col-2.pt-1(style={background: 'yellow'})
+      div.col-2.pt-1(style={background: 'purple'})
+      div.col-2.pt-1(style={background: 'orange'})
+    nav.navbar.navbar-dark.bg-dark
+      span.navbar-brand.h1.title.mb-0
+        | Welcome to #{title}
+        //- login + out button
+      if !user && process.env.NODE_ENV !== 'development'
+        a(class ="sub-title" href="/twitter/login") 
+          | Login
+      if !user && process.env.NODE_ENV === 'development'
+        a(class ="sub-title" href="/twitter/profile") 
+          | Login - Dev
+      if user
+        a(class ="sub-title" href="/twitter/logout") 
+          | Logout #{user.displayName}
+    if user
+      main.container
+        -
+          console.log('charCounter')
+        div.row.pr-5
+          div.col-3
+          div.col-6 
+            h3.mt-4 Schedule a tweet   
+            form.mt-2.form-group(action="")
+              label text
+              textarea.form-control(rows="3" id="tweet-text" onClick=console.log('hippies'))
+              br
+              .row
+                div.col-6
+                  label date
+                  br
+                  input(type="date")
+                div.col-6
+                  label time
+                  br
+                  input(type="time")
+              br
+              button.btn.btn-primary.mt-3(type="submit")
+                | Review
+          div.col-3
+          //- div.col-5.m-4
+            //- h4.mt-4 Tweet:
+            //- h4.mt-4 Date:
+            //- h4.mt-4 Time:
+            //- button.btn.btn-primary.mt-3(type="submit")
+            //-       | Tweet it
+            
+
+  //- .container
+  //-   .row
+  //-      .col-sm-12
+          //- table.table.table-hover
+          //-   thead
+          //-     tr
+          //-       th 
+          //-         h1 Welcome to #{title}
+
+            //- tbody
+            //-   tr
+            //-     td
+            //-       if user
+            //-         div(class="container row")
+            //-           div(class="col-4")
+            //-             h5 Logged in as:
+            //-             h3 #{user.displayName}
+            //-             br
+            //-             img(style={width: '110px'} src="#{user.photos[0].value}", alt="")
+            //-             br
+            //-             br
+            //-             a(class ="btn btn-primary" href="/twitter/logout") 
+            //-               | Logout
+            //-           div(class="col-8")
+            //-             h3
+            //-               | Schedule a tweet
+            //-             div(class="form-group")
+            //-               textarea(class="form-control" rows="3")
+            //-               br
+            //-               button(type="submit" class="btn btn-primary")
+            //-                 | Tweet
+                      
+                      
+
+                  //- if !user && process.env.NODE_ENV === 'development'
+                  //-   a(class ="btn btn-primary" href="/twitter/profile") 
+                  //-     | Login With Twitter - dev
+
+                  //- if !user && process.env.NODE_ENV !== 'development'
+                  //-    a(class ="btn btn-primary" href="/twitter/login") 
+                  //-     | Login With Twitter
