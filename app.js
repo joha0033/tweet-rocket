@@ -74,7 +74,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.use(require('cookie-session')({
   name: process.env.SESSION_NAME,
-  keys: process.env.TWITTER_SESSION_SECRET,
+  keys: [process.env.TWITTER_SESSION_SECRET],
 
   // Cookie Options
   maxAge: 72 * 60 * 60 * 1000
