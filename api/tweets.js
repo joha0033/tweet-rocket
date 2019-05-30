@@ -9,17 +9,19 @@ const moment = require('moment')
 
 const consumerKey = process.env.TWITTER_CONSUMER_KEY
 const consumerSecret = process.env.TWITTER_CONSUMER_SECRET
-const accessKey = process.env.TWITTER_ACCESS_TOKEN
-const accessSecret = process.env.TWITTER_ACCESS_TOKEN_SECRET
 
-const T = new Twit({
-  consumer_key: consumerKey,
-  consumer_secret: consumerSecret,
-  access_token: accessKey,
-  access_token_secret: accessSecret,
-  timeout_ms: 60 * 1000,  // optional HTTP request timeout to apply to all requests.
-  strictSSL: true,     // optional - requires SSL certificates to be valid.
-})
+
+
+function createTwitObject(accessKey, accessSecret) {
+  return new Twit({
+    consumer_key: consumerKey,
+    consumer_secret: consumerSecret,
+    access_token: accessKey,
+    access_token_secret: accessSecret,
+    timeout_ms: 60 * 1000,  // optional HTTP request timeout to apply to all requests.
+    strictSSL: true,     // optional - requires SSL certificates to be valid.
+  })
+}
 
 // Node Schedule Syntax
 // *    *    *    *    *    *
@@ -35,8 +37,9 @@ const T = new Twit({
 //   console.log('The answer to life, the universe, and everything!')
 // })
 
-const thenRelease = (tweet) => {
+const thenRelease = (tweet, token, secret) => {
   console.log(tweet, ': in tweetFactory.releaseTweet factory');
+  const T = createTwitObject(token, secret);
   return T.post('statuses/update', { status: tweet }, function (err, data, response) {
     // handle errors
     // console.log(data, 'data')
@@ -54,22 +57,15 @@ const tweetFactory = {
     console.log(theTimeToTweet, 'theTimeToTweet')
     return theTimeToTweet
   },
-  scheduleThis: (status, atThisTime) => {
+  scheduleThis: (status, atThisTime, token, secret) => {
     console.log(status, '<-- status', atThisTime, 'atThisTime in scheduleThis function');
     // new CronJob('* * * * * *', function () {
     //   console.log('You will see this message every day of your life, psyche.');
     // });
     // job.start()
     let scheduled = please.scheduleJob(atThisTime, function () {
-      T.post('statuses/update', { status: tweet }, function (err, data, response) {
-        // handle errors
-        // console.log(data, 'data')
-        // return data
-        // console.log(response, 'response')
-        // console.log(err, 'err')
-      })
       console.log('The answer to life scheduling tweets!', status)
-      // return thenRelease(status)
+      return thenRelease(status, token, secret)
     })
   }
 }
@@ -80,19 +76,18 @@ const formatAndSchedule = ({
   scheduled_time,
   scheduled_date,
   tweet
-}) => {
+}, token, secret) => {
   const formattedDate = tweetFactory
     .formatDate(scheduled_time, scheduled_date)
   console.log(tweet, ': in formatAndSchedule function');
   return tweetFactory
-    .scheduleThis(tweet, formattedDate)
+    .scheduleThis(tweet, formattedDate, token, secret)
 }
 
 router.post('/schedule', async (req, res, next) => {
   const tweetData = req.body
   console.log(tweetData, ': in post /schedule route');
-
-  await formatAndSchedule(tweetData)
+  await formatAndSchedule(tweetData, req.user.accessToken, req.user.accessSecret)
   return res.redirect('/api/v1/twitter/profile')
 
   // queries.scheduleTweet(tweet).then(async (result, err) => {
