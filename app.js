@@ -2,7 +2,7 @@
 
 // Require process, so we can mock environment variables.
 const process = require('process');
-require('dotenv').config()
+require('dotenv').config();
 
 // express and bs
 const express = require('express')
@@ -91,7 +91,11 @@ passport.use(new TwitterStrategy({
   consumerKey,
   consumerSecret,
   callbackURL
-}, (token, tokenSecret, profile, done) => done(null, profile)))
+}, (token, tokenSecret, profile, done) => {
+  profile.accessToken = token;
+  profile.accessSecret = tokenSecret;
+  done(null, profile)
+}))
 
 passport.serializeUser(function (user, callback) {
   callback(null, user)
