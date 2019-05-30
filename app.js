@@ -112,7 +112,7 @@ app.use('/api/v1/twitter', users)
 app.get('/', function (req, res) {
   process.env.NODE_ENV === 'development' && !req.user
     ? res.render('index', { title: 'Tweet Rocket - development!' })
-    : res.render('index', { user: req.user, title: 'Tweet Rocket!!!' })
+    : res.render('index', { user: req.user, title: 'Tweet Rocket!' })
 })
 
 

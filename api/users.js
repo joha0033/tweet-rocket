@@ -38,7 +38,7 @@ router.get('/profile', function (req, res) {
 
 router.get('/callback',
   passport.authenticate('twitter', { failureRedirect: '/' }), (req, res) => {
-    res.redirect('/profile')
+    res.redirect('api/v1/profile')
   })
 
 module.exports = router
