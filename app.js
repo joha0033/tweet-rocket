@@ -6,6 +6,7 @@ require('dotenv').config()
 
 // express and bs
 const express = require('express')
+const session = require('express-session')
 const path = require('path')
 const favicon = require('serve-favicon')
 
