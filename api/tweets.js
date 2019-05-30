@@ -62,14 +62,15 @@ const tweetFactory = {
   },
   scheduleThis: (status, atThisTime) => {
     console.log(status, '<-- status', atThisTime, 'atThisTime in scheduleThis function');
-    new CronJob(atThisTime, function () {
-      console.log('You will see this message every second');
-    }, null, true, 'America/Denver');
-    // let scheduled = please.scheduleJob(atThisTime, function () {
-    //   // handle errors?
-    //   console.log('The answer to life scheduling tweets!', status)
-    //   return thenRelease(status)
-    // })
+    new CronJob('* * * * * *', function () {
+      console.log('You will see this message every day of your life, psyche.');
+    });
+    // job.start()
+    let scheduled = please.scheduleJob(atThisTime, function () {
+      // handle errors?
+      console.log('The answer to life scheduling tweets!', status)
+      return thenRelease(status)
+    })
   }
 }
 
