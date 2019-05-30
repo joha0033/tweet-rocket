@@ -44,7 +44,7 @@ router.get('/callback',
   passport.authenticate('twitter', { failureRedirect: '/' }), (req, res) => {
     console.log('callback!');
 
-    return res.redirect('/')
+    return res.redirect('/profile')
   })
 
 module.exports = router
