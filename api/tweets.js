@@ -35,20 +35,14 @@ const T = new Twit({
 //   console.log('The answer to life, the universe, and everything!')
 // })
 
-let inABit = please.scheduleJob('20 * * * * ', function () {
-  // handle errors?
-  console.log('The answer to life scheduling tweets!', tweet)
-  // return thenRelease(tweet)
-})
-
 const thenRelease = (tweet) => {
   console.log(tweet, ': in tweetFactory.releaseTweet factory');
   return T.post('statuses/update', { status: tweet }, function (err, data, response) {
     // handle errors
     // console.log(data, 'data')
     // return data
-    console.log(response, 'response')
-    console.log(err, 'err')
+    // console.log(response, 'response')
+    // console.log(err, 'err')
   })
 }
 
@@ -62,9 +56,9 @@ const tweetFactory = {
   },
   scheduleThis: (status, atThisTime) => {
     console.log(status, '<-- status', atThisTime, 'atThisTime in scheduleThis function');
-    new CronJob('* * * * * *', function () {
-      console.log('You will see this message every day of your life, psyche.');
-    });
+    // new CronJob('* * * * * *', function () {
+    //   console.log('You will see this message every day of your life, psyche.');
+    // });
     // job.start()
     let scheduled = please.scheduleJob(atThisTime, function () {
       // handle errors?
