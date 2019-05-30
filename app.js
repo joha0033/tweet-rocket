@@ -91,10 +91,36 @@ passport.use(new TwitterStrategy({
   consumerKey,
   consumerSecret,
   callbackURL
-}, (token, tokenSecret, profile, done) => {
+}, async(token, tokenSecret, profile, done) => {
   profile.accessToken = token;
   profile.accessSecret = tokenSecret;
-  done(null, profile)
+  // add user to the db
+  // if user exists, update access token and secret
+  if (await queries.getUserByTwitterId(profile.id)) {
+    try {
+      const user = await queries.updateUserAccessTokenAndSecret(profile.id, token, tokenSecret);
+      // call callback to add user to the session
+      done(null, user[0])
+    } catch (error) {
+      done(error);
+    }
+  } else {
+    // else create new user
+    try {
+      const user = await queries.createPerson({
+        username: profile.username,
+        display_name: profile.displayName,
+        provider: profile.provider,
+        twitter_access_token: token,
+        twitter_access_secret: tokenSecret,
+        twitter_id: (profile.id).toString(),
+      })
+      // call callback to add user to the session
+      done(null, user[0])
+    } catch (error) {
+      done(error);
+    }
+  }
 }))
 
 passport.serializeUser(function (user, callback) {
