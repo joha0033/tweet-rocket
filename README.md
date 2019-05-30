@@ -28,8 +28,6 @@ Create a *.env* file and add the following variables:
 ```
 TWITTER_CONSUMER_KEY=UPDATE_ME
 TWITTER_CONSUMER_SECRET=UPDATE_ME
-TWITTER_ACCESS_TOKEN=UPDATE_ME
-TWITTER_ACCESS_TOKEN_SECRET=UPDATE_ME
 TWITTER_SESSION_SECRET=UPDATE_ME
 TWITTER_CALLBACK_URL=http://localhost:3000/api/v1/twitter/callback
 ```
@@ -38,4 +36,10 @@ Run the app:
 
 ```sh
 $ npm start
+```
+
+Lint:
+
+```sh
+$ npm run lint
 ```
