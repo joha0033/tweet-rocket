@@ -10,9 +10,9 @@ router.get('/login', passport.authenticate('twitter'), (req, res) => {
 })
 
 router.get('/logout', function (req, res) {
-  // req.session.destroy(function (err) {
-  res.redirect('/')
-  // })
+  req.session.destroy(function (err) {
+    res.redirect('/')
+  })
 })
 
 router.get('/profile', function (req, res) {
