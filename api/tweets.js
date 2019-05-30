@@ -34,6 +34,17 @@ const T = new Twit({
 //   console.log('The answer to life, the universe, and everything!')
 // })
 
+const thenRelease = (tweet) => {
+  console.log(tweet, ': in tweetFactory.releaseTweet factory');
+  return T.post('statuses/update', { status: tweet }, function (err, data, response) {
+    // handle errors
+    // console.log(data, 'data')
+    // return data
+    console.log(response, 'response')
+    console.log(err, 'err')
+  })
+}
+
 const tweetFactory = {
   formatDate: (time, date) => {
     const [hour, minute] = time.split(':')
@@ -41,25 +52,16 @@ const tweetFactory = {
     const theTimeToTweet = `00 ${minute} ${hour} ${day} ${month} ?`
     return theTimeToTweet
   },
-  scheduleThis: (tweet, atThisTime, thenRelease) => {
+  scheduleThis: (tweet, atThisTime) => {
     please.scheduleJob(atThisTime, function () {
       // handle errors?
       console.log('The answer to life scheduling tweets!', tweet)
       return thenRelease(tweet)
     })
-  },
-  releaseTweet: (tweet) => {
-
-    console.log(tweet, ': in tweetFactory.releaseTweet factory');
-    return T.post('statuses/update', { status: tweet }, function (err, data, response) {
-      // handle errors
-      // console.log(data, 'data')
-      return data
-      console.log(response, 'response')
-      console.log(err, 'err')
-    })
   }
 }
+
+
 
 const formatAndSchedule = ({
   scheduled_time,
@@ -70,7 +72,7 @@ const formatAndSchedule = ({
     .formatDate(scheduled_time, scheduled_date)
   console.log(tweet, ': in formatAndSchedule function');
   return tweetFactory
-    .scheduleThis(tweet, formattedDate, tweetFactory.releaseTweet)
+    .scheduleThis(tweet, formattedDate)
 }
 
 router.post('/schedule', async (req, res, next) => {
