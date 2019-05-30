@@ -34,7 +34,7 @@ const T = new Twit({
 //   console.log('The answer to life, the universe, and everything!')
 // })
 
-please.scheduleJob('20 * * * * ', function () {
+let inABit = please.scheduleJob('20 * * * * ', function () {
   // handle errors?
   console.log('The answer to life scheduling tweets!', tweet)
   // return thenRelease(tweet)
@@ -62,7 +62,7 @@ const tweetFactory = {
   scheduleThis: (status, atThisTime) => {
     console.log(status, '<-- status', atThisTime, 'atThisTime in scheduleThis function');
 
-    please.scheduleJob(atThisTime, function () {
+    let scheduled = please.scheduleJob(atThisTime, function () {
       // handle errors?
       console.log('The answer to life scheduling tweets!', status)
       return thenRelease(status)
