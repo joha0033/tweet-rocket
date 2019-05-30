@@ -66,20 +66,20 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 
 // add session config
-// app.use(session({
-//   name: process.env.SESSION_NAME,
-//   secret: process.env.TWITTER_SESSION_SECRET,
-//   resave: true,
-//   saveUninitialized: true,
-// }))
-
-app.use(require('cookie-session')({
+app.use(session({
   name: process.env.SESSION_NAME,
-  keys: [process.env.TWITTER_SESSION_SECRET],
+  secret: process.env.TWITTER_SESSION_SECRET,
+  resave: true,
+  saveUninitialized: true,
+}))
 
-  // Cookie Options
-  maxAge: 24 * 60 * 60 * 1000
-}));
+// app.use(require('cookie-session')({
+//   name: process.env.SESSION_NAME,
+//   keys: [process.env.TWITTER_SESSION_SECRET],
+
+//   // Cookie Options
+//   maxAge: 24 * 60 * 60 * 1000
+// }));
 
 // secret keys for passport
 const consumerKey = process.env.TWITTER_CONSUMER_KEY
