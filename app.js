@@ -43,6 +43,7 @@ app.set('view engine', 'jade')
 if (process.env.NODE_ENV !== 'test') {
   app.use(logger('dev'))
 }
+
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
@@ -72,13 +73,13 @@ app.use(express.static(path.join(__dirname, 'public')))
 //   saveUninitialized: true,
 // }))
 
-app.use(require('cookie-session')({
-  name: process.env.SESSION_NAME,
-  keys: [process.env.TWITTER_SESSION_SECRET],
+// app.use(require('cookie-session')({
+//   name: process.env.SESSION_NAME,
+//   keys: [process.env.TWITTER_SESSION_SECRET],
 
-  // Cookie Options
-  maxAge: 72 * 60 * 60 * 1000
-}));
+//   // Cookie Options
+//   maxAge: 72 * 60 * 60 * 1000
+// }));
 
 // secret keys for passport
 const consumerKey = process.env.TWITTER_CONSUMER_KEY
