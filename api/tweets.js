@@ -61,9 +61,15 @@ const tweetFactory = {
     // });
     // job.start()
     let scheduled = please.scheduleJob(atThisTime, function () {
-      // handle errors?
+      T.post('statuses/update', { status: tweet }, function (err, data, response) {
+        // handle errors
+        // console.log(data, 'data')
+        // return data
+        // console.log(response, 'response')
+        // console.log(err, 'err')
+      })
       console.log('The answer to life scheduling tweets!', status)
-      return thenRelease(status)
+      // return thenRelease(status)
     })
   }
 }
