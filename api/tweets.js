@@ -51,7 +51,8 @@ const tweetFactory = {
 
     return T.post('statuses/update', { status: tweet }, function (err, data, response) {
       // handle errors
-      // console.log(data, 'data')
+      console.log(data, 'data')
+      return data
       // console.log(response, 'response')
       // console.log(err, 'err')
     })
@@ -70,10 +71,10 @@ const formatAndSchedule = ({
     .scheduleThis(tweet, formattedDate, tweetFactory.releaseTweet)
 }
 
-router.post('/schedule', (req, res, next) => {
+router.post('/schedule', async (req, res, next) => {
   const tweetData = req.body
-  formatAndSchedule(tweetData)
-  return res.redirect('/')
+  await formatAndSchedule(tweetData)
+  return res.redirect('/api/v1/twitter/profile')
   // queries.scheduleTweet(tweet).then((result, err) => {
   //   if (err) {
   //     console.log(err);
