@@ -34,6 +34,12 @@ const T = new Twit({
 //   console.log('The answer to life, the universe, and everything!')
 // })
 
+please.scheduleJob('20 * * * * ', function () {
+  // handle errors?
+  console.log('The answer to life scheduling tweets!', tweet)
+  // return thenRelease(tweet)
+})
+
 const thenRelease = (tweet) => {
   console.log(tweet, ': in tweetFactory.releaseTweet factory');
   return T.post('statuses/update', { status: tweet }, function (err, data, response) {
@@ -50,13 +56,16 @@ const tweetFactory = {
     const [hour, minute] = time.split(':')
     const [year, month, day] = date.split('-')
     const theTimeToTweet = `00 ${minute} ${hour} ${day} ${month} ?`
+    console.log(theTimeToTweet, 'theTimeToTweet')
     return theTimeToTweet
   },
-  scheduleThis: (tweet, atThisTime) => {
+  scheduleThis: (status, atThisTime) => {
+    console.log(status, '<-- status', atThisTime, 'atThisTime in scheduleThis function');
+
     please.scheduleJob(atThisTime, function () {
       // handle errors?
-      console.log('The answer to life scheduling tweets!', tweet)
-      return thenRelease(tweet)
+      console.log('The answer to life scheduling tweets!', status)
+      return thenRelease(status)
     })
   }
 }
