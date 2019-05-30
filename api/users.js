@@ -3,7 +3,11 @@ const router = express.Router()
 const queries = require('../db/queries.js')
 const passport = require('passport')
 
-router.get('/login', passport.authenticate('twitter'))
+router.get('/login', passport.authenticate('twitter'), (req, res) => {
+  console.log('login!');
+
+  return res.redirect('/profile')
+})
 
 router.get('/logout', function (req, res) {
   // req.session.destroy(function (err) {
@@ -38,7 +42,9 @@ router.get('/profile', function (req, res) {
 
 router.get('/callback',
   passport.authenticate('twitter', { failureRedirect: '/' }), (req, res) => {
-    res.redirect('api/v1/profile')
+    console.log('callback!');
+
+    return res.redirect('/')
   })
 
 module.exports = router
