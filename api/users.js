@@ -26,18 +26,19 @@ router.get('/profile', function (req, res) {
       displayName: "Developer Name",
       admin: false
     }
+  return res.render('index', { user, title: "Tweet Rocket!" })
 
-  return queries.getUserById(user.id).then((isUser) => {
-    isUser
-      ? res.render('index', { user, title: "Tweet Rocket!" })
-      : queries.createPerson(user).then(result => {
-        return user
-      }).then((user) => {
-        queries.getUserById(user.id).then((user) => {
-          res.render('index', { user, title: "Tweet Rocket!" })
-        })
-      })
-  })
+  // return queries.getUserById(user.id).then((isUser) => {
+  //   isUser
+  //     ? res.render('index', { user, title: "Tweet Rocket!" })
+  //     : queries.createPerson(user).then(result => {
+  //       return user
+  //     }).then((user) => {
+  //       queries.getUserById(user.id).then((user) => {
+  //         res.render('index', { user, title: "Tweet Rocket!" })
+  //       })
+  //     })
+  // })
 })
 
 router.get('/callback',
