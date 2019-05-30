@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const queries = require('../db/queries.js')
 const please = require('node-schedule')
+const CronJob = require('cron').CronJob;
 const Twit = require('twit')
 const momentTimezone = require('moment-timezone')
 const moment = require('moment')
@@ -61,12 +62,14 @@ const tweetFactory = {
   },
   scheduleThis: (status, atThisTime) => {
     console.log(status, '<-- status', atThisTime, 'atThisTime in scheduleThis function');
-
-    let scheduled = please.scheduleJob(atThisTime, function () {
-      // handle errors?
-      console.log('The answer to life scheduling tweets!', status)
-      return thenRelease(status)
-    })
+    new CronJob(atThisTime, function () {
+      console.log('You will see this message every second');
+    }, null, true, 'America/Denver');
+    // let scheduled = please.scheduleJob(atThisTime, function () {
+    //   // handle errors?
+    //   console.log('The answer to life scheduling tweets!', status)
+    //   return thenRelease(status)
+    // })
   }
 }
 
