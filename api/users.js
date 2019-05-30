@@ -17,6 +17,8 @@ router.get('/logout', function (req, res) {
 
 router.get('/profile', function (req, res) {
   let user
+  console.log(req.user, 'req.user!?!?');
+
   req.user
     ? user = req.user
     : user = {

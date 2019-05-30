@@ -6,6 +6,20 @@ const Twit = require('twit')
 const momentTimezone = require('moment-timezone')
 const moment = require('moment')
 
+const consumerKey = process.env.TWITTER_CONSUMER_KEY
+const consumerSecret = process.env.TWITTER_CONSUMER_SECRET
+const accessKey = process.env.TWITTER_ACCESS_TOKEN
+const accessSecret = process.env.TWITTER_ACCESS_TOKEN_SECRET
+
+const T = new Twit({
+  consumer_key: consumerKey,
+  consumer_secret: consumerSecret,
+  access_token: accessKey,
+  access_token_secret: accessSecret,
+  timeout_ms: 60 * 1000,  // optional HTTP request timeout to apply to all requests.
+  strictSSL: true,     // optional - requires SSL certificates to be valid.
+})
+
 // Node Schedule Syntax
 // *    *    *    *    *    *
 // ┬    ┬    ┬    ┬    ┬    ┬
@@ -35,19 +49,7 @@ const tweetFactory = {
     })
   },
   releaseTweet: (tweet) => {
-    const consumerKey = process.env.TWITTER_CONSUMER_KEY
-    const consumerSecret = process.env.TWITTER_CONSUMER_SECRET
-    const accessKey = process.env.TWITTER_ACCESS_TOKEN
-    const accessSecret = process.env.TWITTER_ACCESS_TOKEN_SECRET
 
-    const T = new Twit({
-      consumer_key: consumerKey,
-      consumer_secret: consumerSecret,
-      access_token: accessKey,
-      access_token_secret: accessSecret,
-      timeout_ms: 60 * 1000,  // optional HTTP request timeout to apply to all requests.
-      strictSSL: true,     // optional - requires SSL certificates to be valid.
-    })
 
     return T.post('statuses/update', { status: tweet }, function (err, data, response) {
       // handle errors
@@ -71,20 +73,19 @@ const formatAndSchedule = ({
     .scheduleThis(tweet, formattedDate, tweetFactory.releaseTweet)
 }
 
-router.post('/schedule', async (req, res, next) => {
+router.post('/schedule', (req, res, next) => {
   const tweetData = req.body
-  await formatAndSchedule(tweetData)
-  return res.redirect('/api/v1/twitter/profile')
-  // queries.scheduleTweet(tweet).then((result, err) => {
-  //   if (err) {
-  //     console.log(err);
-  //     return res.redirect('/api/v1/twitter/profile')
-  //   }
-  //   const tweetData = result[0]
-  //   console.log('tweet saved:', tweetData)
-  //   formatAndSchedule(tweetData)
-  //   return res.redirect('/api/v1/twitter/profile')
-  // })
+
+  queries.scheduleTweet(tweet).then(async (result, err) => {
+    if (err) {
+      console.log(err);
+      return res.redirect('/api/v1/twitter/profile')
+    }
+    const tweetData = result[0]
+    console.log('tweet saved:', tweetData)
+    await formatAndSchedule(tweetData)
+    return res.redirect('/api/v1/twitter/profile')
+  })
 })
 
 module.exports = router
