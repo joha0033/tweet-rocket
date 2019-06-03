@@ -91,7 +91,7 @@ passport.use(new TwitterStrategy({
   consumerKey,
   consumerSecret,
   callbackURL
-}, async(token, tokenSecret, profile, done) => {
+}, async (token, tokenSecret, profile, done) => {
   profile.accessToken = token;
   profile.accessSecret = tokenSecret;
   // add user to the db
