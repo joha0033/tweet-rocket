@@ -12,12 +12,12 @@ module.exports = {
   },
   updateUserAccessTokenAndSecret(twitterId, token, secret) {
     return knex('users')
-    .where('twitter_id', twitterId)
-    .update({
-      twitter_access_token: token,
-      twitter_access_secret: secret,
-    })
-    .returning('*');
+      .where('twitter_id', twitterId)
+      .update({
+        twitter_access_token: token,
+        twitter_access_secret: secret,
+      })
+      .returning('*');
   },
   saveTweet(tweet) {
     tweet = {
@@ -28,7 +28,16 @@ module.exports = {
   },
   getUnsentTweets() {
     return knex('tweets')
-    .where('sent', false)
-    .returning('*');
+      .where('sent', false)
+      .returning('*');
+  },
+  updateTweetToSent(id, user_id) {
+    return knex('tweets')
+      .where('id', id)
+      .andWhere('user_id', user_id)
+      .update({
+        sent: true
+      })
+      .returning('*')
   }
 }
