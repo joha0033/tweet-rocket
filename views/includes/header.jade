@@ -10,12 +10,9 @@ header
       span.navbar-brand.h1.title.mb-0
         | Welcome to #{title}
         //- login + out button
-      if !user && process.env.NODE_ENV !== 'development'
-        a(class ="sub-title" href="/api/v1/twitter/login") 
+      if !user
+        a(class ="sub-title" href="/api/v1/twitter/login")
           | Login
-      if !user && process.env.NODE_ENV === 'development'
-        a(class ="sub-title" href="/api/v1/twitter/profile") 
-          | Login - Dev
       if user
-        a(class ="sub-title" href="/api/v1/twitter/logout") 
-          | Logout #{user.displayName}
+        a(class ="sub-title" href="/api/v1/twitter/logout")
+          | Logout #{user.display_name}

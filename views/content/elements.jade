@@ -15,7 +15,7 @@ style(type='text/css').
     grid-template-columns: 1fr 1fr;
   }
 
-  @media (max-width: 580px) { 
+  @media (max-width: 580px) {
     main {
       display: grid;
       grid-template-columns: 1fr 6fr 1fr;
@@ -32,7 +32,7 @@ style(type='text/css').
     }
   }
 
-  @media (max-width: 375px) { 
+  @media (max-width: 375px) {
     main {
       display: grid;
       grid-template-columns: 1fr 6fr 1fr;
@@ -63,14 +63,14 @@ script.
           month = '0' + month.toString();
       if(day < 10)
           day = '0' + day.toString();
-      
+
       var maxDate = year + '-' + month + '-' + day;
       $('#tweet-date').attr('min', maxDate);
       return maxDate
     }
 
     const today = (todaysDate)()
-    
+
 
     $("#tweet-date").on('blur', function() {
       if($('#tweet-date').val() <= todaysDate()){
@@ -111,11 +111,11 @@ if user
       main.container
         div
         div
-          h3.mt-4 Schedule a tweet   
+          h3.mt-4 Schedule a tweet
           form#tweet-form.form-grid(action='/api/v1/tweets/schedule', method='POST')
             label text
             textarea.form-control(rows="3" id="tweet-text" name="tweet" required)
-            span remaining: 
+            span remaining:
             span#chars_left 140
             br
             div.date-time-grid
@@ -130,6 +130,6 @@ if user
             br
             input(novalidate id="tweet-id" name ="user_id" required hidden value="#{user.id}")
             div
-              button.btn.btn-primary.mb-3#submit-button(type="submit") 
+              button.btn.btn-primary.mb-3#submit-button(type="submit")
                 | Submit
           div
