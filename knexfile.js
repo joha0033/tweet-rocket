@@ -1,4 +1,7 @@
 // // Update with your config settings.
+require('dotenv');
+console.log(process.env.DATABASE_URL, 'knexfile');
+
 module.exports = {
   development: {
     client: 'pg',
@@ -23,21 +26,15 @@ module.exports = {
     },
     useNullAsDefault: true
   },
-
   production: {
     client: 'pg',
-    connection: {
-      user: process.env.DB_USER,
-      password: process.env.DB_PASS,
-      database: process.env.DB_NAME,
-      host: process.env.DATABASE_URL
-    },
+    // The next line is where the application will read that environment variable to connect to the database
+    connection: process.env.DATABASE_URL,
     migrations: {
-      directory: './db/migrations/production'
+      directory: './db/migrations',
     },
     seeds: {
-      directory: './db/seeds/production'
+      directory: './db/seeds/production',
     },
-    useNullAsDefault: true
-  }
+  },
 }
