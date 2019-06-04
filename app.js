@@ -16,16 +16,6 @@ const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const Knex = require('knex');
 
-// test moment
-const thisMoment = require('moment')
-const date = '2019-06-03 19:30'
-const time = '17:30'
-const thirtyAgo = () => thisMoment().subtract(30, 'minutes').format()
-const thirtyAhead = () => thisMoment().add(30, 'minutes').format()
-console.log(thisMoment().isSameOrBefore(date));
-console.log(date, 'is in between', thirtyAgo(), 'and', 'thirtyAhead?', thisMoment(date).isBetween(thirtyAgo(), thirtyAhead()));
-
-
 // passport requirements
 // const session = require('express-session')
 const passport = require('passport')
