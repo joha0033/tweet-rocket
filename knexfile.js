@@ -1,5 +1,6 @@
 // // Update with your config settings.
-require('dotenv').config();
+require('dotenv');
+console.log(process.env.DATABASE_URL, 'knexfile');
 
 module.exports = {
   development: {
@@ -30,10 +31,10 @@ module.exports = {
     // The next line is where the application will read that environment variable to connect to the database
     connection: process.env.DATABASE_URL,
     migrations: {
-      directory: __dirname + '/db/migrations',
+      directory: './db/migrations',
     },
     seeds: {
-      directory: __dirname + '/db/seeds/production',
+      directory: './db/seeds/production',
     },
   },
 }
