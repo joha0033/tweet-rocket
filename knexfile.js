@@ -35,12 +35,12 @@ module.exports = {
     //   database: process.env.DB_NAME,
     //   host: process.env.DATABASE_URL
     // },
-    migrations: {
-      directory: './db/migrations/production'
-    },
-    seeds: {
-      directory: './db/seeds/production'
-    },
-    useNullAsDefault: true
+    // migrations: {
+    //   directory: './db/migrations/production'
+    // },
+    // seeds: {
+    //   directory: './db/seeds/production'
+    // },
+    // useNullAsDefault: true
   }
 }
