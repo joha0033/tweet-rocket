@@ -20,7 +20,7 @@ router.get('/logout', function (req, res) {
 
 router.get('/profile', function (req, res) {
   const user = req.user;
-  console.log(user)
+  // console.log(user)
   return res.render('index', { user, title: "Tweet Rocket!" })
 })
 

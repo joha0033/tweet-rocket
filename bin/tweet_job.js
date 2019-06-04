@@ -18,6 +18,8 @@ const todaysDate = thisMoment().format('YYYY-MM-DD')
 const thirtyAgo = () => thisMoment().subtract(30, 'minutes').format()
 const thirtyAhead = () => thisMoment().add(30, 'minutes').format()
 
+console.log('findme : job file hit.');
+
 const createTwit = async (accessKey, accessSecret) =>
   new Twit({
     consumer_key: consumerKey,
@@ -63,6 +65,8 @@ const sendTweetsScheduledForNow = () =>
   tweetsToSendNow().then((tweets) =>
     tweets.map(tweet =>
       thenRelease(tweet)))
+
+sendTweetsScheduledForNow()
 
 module.exports = {
   sendTweetsScheduledForNow

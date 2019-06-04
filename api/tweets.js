@@ -10,11 +10,11 @@ router.post('/schedule', (req, res, next) => {
       console.log(err);
       return res.redirect('/api/v1/twitter/profile')
     }
-    setTimeout(() => {
-      console.log('timeout = TIME\'S UP!');
+    // setTimeout(() => {
+    //   console.log('timeout = TIME\'S UP!');
 
-      sendTweetsScheduledForNow()
-    }, 5000)
+    //   sendTweetsScheduledForNow()
+    // }, 5000)
     // sendTweetsScheduledForNow()
     return res.redirect('/api/v1/twitter/profile')
   })
