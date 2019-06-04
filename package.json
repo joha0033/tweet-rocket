@@ -6,7 +6,7 @@
     "node": "10.3.0"
   },
   "scripts": {
-    "start": "export NODE_ENV=production && node ./bin/www",
+    "start": "NODE_ENV=production node ./bin/www",
     "dev": "export NODE_ENV=development && nodemon",
     "test": "export NODE_ENV=test && ./node_modules/mocha/bin/_mocha",
     "lint": "eslint ."

@@ -1,6 +1,5 @@
 // // Update with your config settings.
 require('dotenv');
-console.log(process.env.DATABASE_URL, 'knexfile');
 
 module.exports = {
   development: {
