@@ -26,12 +26,13 @@ module.exports = {
 
   production: {
     client: 'pg',
-    connection: {
-      user: process.env.DB_USER,
-      password: process.env.DB_PASS,
-      database: process.env.DB_NAME,
-      host: process.env.DATABASE_URL
-    },
+    connection: process.env.DATABASE_URL,
+    // connection: {
+    //   user: process.env.DB_USER,
+    //   password: process.env.DB_PASS,
+    //   database: process.env.DB_NAME,
+    //   host: process.env.DATABASE_URL
+    // },
     migrations: {
       directory: './db/migrations/production'
     },
