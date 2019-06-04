@@ -15,49 +15,59 @@ it time is acceptable, send that mofo
 
 const queries = require('../db/queries.js');
 const todaysDate = thisMoment().format('YYYY-MM-DD')
-const timeNow = () => thisMoment().format('kk:mm')
+const thirtyAgo = () => thisMoment().subtract(30, 'minutes').format()
+const thirtyAhead = () => thisMoment().add(30, 'minutes').format()
 
-const createTwit = async (accessKey, accessSecret) => new Twit({
-  consumer_key: consumerKey,
-  consumer_secret: consumerSecret,
-  access_token: accessKey,
-  access_token_secret: accessSecret,
-  timeout_ms: 60 * 1000,  // optional HTTP request timeout to apply to all requests.
-  strictSSL: true,     // optional - requires SSL certificates to be valid.
-})
+const createTwit = async (accessKey, accessSecret) =>
+  new Twit({
+    consumer_key: consumerKey,
+    consumer_secret: consumerSecret,
+    access_token: accessKey,
+    access_token_secret: accessSecret,
+    timeout_ms: 60 * 1000,  // optional HTTP request timeout to apply to all requests.
+    strictSSL: true,     // optional - requires SSL certificates to be valid.
+  })
 
-const thenRelease = ({ id, user_id, tweet, token, secret }) =>
-  createTwit.then(twit =>
-    twit.post('statuses/update', { status: tweet }, async (err, data, response) =>
-      queries.updateTweetToSent(id, user_id).then(async sent => sent
-        ? console.log('maybe there\'s success?')
-        : console.log('maybe there\'s an error?'))))
+const thenRelease = ({ id, user_id, tweet }) =>
+  queries.getUsersTwitterAuth(user_id).then(([{ twitter_access_token, twitter_access_secret }]) =>
+    createTwit(twitter_access_token, twitter_access_secret).then(twit =>
+      twit.post('statuses/update', { status: tweet }, async (err, data, response) =>
+        queries.updateTweetToSent(id, user_id).then(async sent => sent
+          ? console.log('hey, maybe there\'s success or something about your tweet?')
+          : console.log('maybe there\'s an error?')))))
+
 
 const checkDBForUnsentTweets = async () =>
-  queries.getUnsentTweets()
+  queries.getUnsentTweets() // and populate userId data?
 
-const verifyUnsentTweetsByDate = async (tweets) =>
+const verifyUnsentTweetsByDate = (tweets) =>
   tweets.filter(tweet =>
     thisMoment().isSameOrBefore(tweet.scheduled_for))
 
-const checkAndVerifyTweetDates = async () =>
-  checkDBForUnsentTweets()
-    .then((tweets) =>
-      verifyUnsentTweetsByDate(tweets))
+const checkAndVerifyTweetDates = () =>
+  checkDBForUnsentTweets().then(tweets =>
+    verifyUnsentTweetsByDate(tweets))
 
 const tweetsToSendToday = async () =>
-  checkAndVerifyTweetDates()
-    .then(tweets => tweets.filter(tweet =>
+  checkAndVerifyTweetDates().then(tweets =>
+    tweets.filter(tweet =>
       tweet.scheduled_date === todaysDate))
 
 const tweetsToSendNow = async () =>
-  tweetsToSendToday()
-    .then(tweets => tweets.filter(tweet =>
-      tweet.scheduled_time === timeNow))
+  tweetsToSendToday().then(tweets =>
+    tweets.filter(tweet =>
+      thisMoment(tweet.scheduled_for)
+        .isBetween(thirtyAgo(), thirtyAhead())))
 
-const sendTweetsScheduledForNow = async (tweetsToSendNow) =>
-  await tweetsToSendNow()
-    .then(tweet => thenRelease(tweet))
+const sendTweetsScheduledForNow = () =>
+  tweetsToSendNow().then((tweets) =>
+    tweets.map(tweet =>
+      thenRelease(tweet)))
+
+module.exports = {
+  sendTweetsScheduledForNow
+}
+
 
 // function createTwitObject(accessKey, accessSecret) {
 //   return new Twit({
@@ -112,4 +122,5 @@ const sendTweetsScheduledForNow = async (tweetsToSendNow) =>
 //     resolve(tweetsToSend);
 //   });
 // }
+
 // https://devcenter.heroku.com/articles/scheduler

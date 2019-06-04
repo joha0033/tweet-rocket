@@ -7,6 +7,7 @@ exports.up = (knex, Promise) => {
     table.string('scheduled_time').notNullable()
     table.string('scheduled_date').notNullable()
     table.string('scheduled_for').notNullable()
+    table.bool('sent').notNullable().default(false)
     table.timestamp('created_at').defaultTo(knex.fn.now());
   });
 };
