@@ -28,9 +28,9 @@ module.exports = {
   production: {
     client: 'pg',
     // The next line is where the application will read that environment variable to connect to the database
-    connection: process.env.DATABASE_URL,
+    connection: process.env.DATABASE_URL + "?ssl=true",
     migrations: {
-      directory: './db/migrations',
+      directory: './db/migrations/production',
     },
     seeds: {
       directory: './db/seeds/production',

@@ -3,7 +3,13 @@ const router = express.Router()
 const passport = require('passport')
 
 router.get('/login', passport.authenticate('twitter'), (req, res) => {
-  return res.redirect('/profile');
+  try {
+    return res.redirect('/profile');
+  } catch (err) {
+    console.log(err, 'as error.');
+
+  }
+
 })
 
 router.get('/logout', function (req, res) {
