@@ -47,8 +47,11 @@ const verifyUnsentTweetsByDate = (tweets) =>
     thisMoment().isSameOrBefore(tweet.scheduled_for))
 
 const checkAndVerifyTweetDates = () =>
-  checkDBForUnsentTweets().then(tweets =>
-    verifyUnsentTweetsByDate(tweets))
+  checkDBForUnsentTweets().then(tweets => {
+    console.log(tweets, 'checkAndVerifyTweetDates => checkDBForUnsentTweets');
+
+    return verifyUnsentTweetsByDate(tweets)
+  })
 
 const tweetsToSendToday = async () =>
   checkAndVerifyTweetDates().then(tweets =>
