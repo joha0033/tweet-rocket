@@ -56,6 +56,9 @@ const app = express()
 // isSameOrBefore NO NO isSameOrAfter, right???
 // Lets teset
 const thisMoment = require('moment')
+let date = new Date('2019-06-04 01:30')
+console.log(date);
+
 const thirtyAgo = () => thisMoment().subtract(30, 'minutes').format()
 const thirtyAhead = () => thisMoment().add(30, 'minutes').format()
 

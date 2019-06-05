@@ -54,8 +54,8 @@ const checkDBForUnsentTweets = async () =>
 const verifyUnsentTweetsByDate = (tweets) => {
   console.log('verifyUnsentTweetsByDate recieves tweets (length XXX)', tweets.length);
   return tweets.filter(tweet => {
-    console.log('this momenent', thisMoment().utc(), ' is same or after', tweet.scheduled_for, '? ', thisMoment().isSameOrAfter(tweet.scheduled_for));
-    return thisMoment().utc().isSameOrAfter(tweet.scheduled_for)
+    console.log('this momenent', thisMoment(), ' is same or after', tweet.scheduled_for, '? ', thisMoment().isSameOrAfter(new Date(tweet.scheduled_for)));
+    return thisMoment().isSameOrAfter(new Date(tweet.scheduled_for))
   })
 }
 
@@ -72,7 +72,7 @@ const tweetsToSendToday = async () =>
     console.log('This evaluates tweet.scheduled_date === todaysDate in tweetsToSendToday (length XXXX)', tweets)
     return tweets.filter(tweet => {
       const scheduleDateMatches = tweet.scheduled_date === todaysDate
-      console.log('tweet.scheduled_date:', tweet.scheduled_date, 'is equal to todaysDate:', todaysDate, '?', 'scheduleDateMatches', scheduleDateMatches);
+      console.log('tweet.scheduled_date:', thisMoment(new Date(tweet.scheduled_date)).utc(), 'is equal to todaysDate:', todaysDate, '?', 'scheduleDateMatches', scheduleDateMatches);
       return scheduleDateMatches
     })
   })
