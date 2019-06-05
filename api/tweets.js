@@ -16,6 +16,7 @@ router.post('/schedule', (req, res, next) => {
     //   sendTweetsScheduledForNow()
     // }, 5000)
     // sendTweetsScheduledForNow()
+    console.log('RESULT FROM saveTweet Query in /schedule route');
     return res.redirect('/api/v1/twitter/profile')
   })
 })

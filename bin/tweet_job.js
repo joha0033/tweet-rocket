@@ -20,8 +20,10 @@ const thirtyAhead = () => thisMoment().add(30, 'minutes').format()
 
 console.log('findme : job file hit.');
 
-const createTwit = async (accessKey, accessSecret) =>
-  new Twit({
+const createTwit = async (accessKey, accessSecret) => {
+  console.log('ceateTwit called!');
+
+  return new Twit({
     consumer_key: consumerKey,
     consumer_secret: consumerSecret,
     access_token: accessKey,
@@ -29,14 +31,21 @@ const createTwit = async (accessKey, accessSecret) =>
     timeout_ms: 60 * 1000,  // optional HTTP request timeout to apply to all requests.
     strictSSL: true,     // optional - requires SSL certificates to be valid.
   })
+}
 
-const thenRelease = ({ id, user_id, tweet }) =>
-  queries.getUsersTwitterAuth(user_id).then(([{ twitter_access_token, twitter_access_secret }]) =>
-    createTwit(twitter_access_token, twitter_access_secret).then(twit =>
+const thenRelease = ({ id, user_id, tweet }) => {
+  console.log('thenRelease called');
+
+  return queries.getUsersTwitterAuth(user_id).then(([{ twitter_access_token, twitter_access_secret }]) => {
+    console.log('queries.getUsersTwitterAuth called');
+
+    return createTwit(twitter_access_token, twitter_access_secret).then(twit =>
       twit.post('statuses/update', { status: tweet }, async (err, data, response) =>
         queries.updateTweetToSent(id, user_id).then(async sent => sent
           ? console.log('hey, maybe there\'s success or something about your tweet?')
-          : console.log('maybe there\'s an error?')))))
+          : console.log('maybe there\'s an error?'))))
+  })
+}
 
 
 const checkDBForUnsentTweets = async () =>
@@ -54,20 +63,37 @@ const checkAndVerifyTweetDates = () =>
   })
 
 const tweetsToSendToday = async () =>
-  checkAndVerifyTweetDates().then(tweets =>
-    tweets.filter(tweet =>
-      tweet.scheduled_date === todaysDate))
+  checkAndVerifyTweetDates().then(tweets => {
+    console.log('This evaluates tweet.scheduled_date === todaysDate in tweetsToSendToday')
+    return tweets.filter(tweet => {
+      const scheduleDateMatches = tweet.scheduled_date === todaysDate
+      console.log('tweet.scheduled_date:', tweet.scheduled_date, 'is equal to todaysDate:', todaysDate, '?', 'scheduleDateMatches', scheduleDateMatches);
+      return scheduleDateMatches
+    })
+  })
 
 const tweetsToSendNow = async () =>
-  tweetsToSendToday().then(tweets =>
-    tweets.filter(tweet =>
-      thisMoment(tweet.scheduled_for)
-        .isBetween(thirtyAgo(), thirtyAhead())))
+  tweetsToSendToday().then(tweets => {
+    console.log('this evaluates if the time scheduled for is +/-30 minutes');
+    console.log('can I move thirty_ functions here?');
+
+    return tweets.filter(tweet => {
+      console.log('30 minutes ago:', thirtyAgo());
+      console.log('30 minutes ahead:', thirtyAhead());
+      console.log('thisMoment(tweet.scheduled_for).isBetween(thirtyAgo(), thirtyAhead()) evaluates to:', thisMoment(tweet.scheduled_for).isBetween(thirtyAgo(), thirtyAhead()));
+
+      return thisMoment(tweet.scheduled_for)
+        .isBetween(thirtyAgo(), thirtyAhead())
+    })
+  })
 
 const sendTweetsScheduledForNow = () =>
-  tweetsToSendNow().then((tweets) =>
+  tweetsToSendNow().then((tweets) => {
+    console.log('The tweets that made the cut!\nInside sendTweetsScheduledForNow:', tweets);
+
     tweets.map(tweet =>
-      thenRelease(tweet)))
+      thenRelease(tweet))
+  })
 
 sendTweetsScheduledForNow()
 

@@ -27,11 +27,11 @@ module.exports = {
   },
   saveTweet(tweet) {
     console.log('saveTweet - Q - tweet:', tweet);
-
     tweet = {
       ...tweet,
       scheduled_for: tweet.scheduled_date + " " + tweet.scheduled_time
     }
+    let savedTweet = knex('tweets').insert(tweet).returning('*');
     return knex('tweets').insert(tweet).returning('*');
   },
   getUnsentTweets() {
