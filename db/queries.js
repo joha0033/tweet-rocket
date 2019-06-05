@@ -1,5 +1,5 @@
 const knex = require('./connection')
-
+const thisMoment = require('moment')
 module.exports = {
   createPerson(user) {
     return knex('users').insert(user).returning('*');
@@ -27,9 +27,12 @@ module.exports = {
   },
   saveTweet(tweet) {
     console.log('saveTweet - Q - tweet:', tweet);
+    // DO CONVERSION IN "ON SAVE" IN DATABASE
     tweet = {
       ...tweet,
-      scheduled_for: tweet.scheduled_date + " " + tweet.scheduled_time
+      scheduled_date: thisMoment(tweet.scheduled_date).utc(),
+      scheduled_time: thisMoment(tweet.scheduled_time).utc(),
+      scheduled_for: tweet.thisMoment(tweet.scheduled_date).utc() + " " + thisMoment(tweet.scheduled_time).utc()
     }
     let savedTweet = knex('tweets').insert(tweet).returning('*');
     return knex('tweets').insert(tweet).returning('*');

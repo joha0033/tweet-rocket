@@ -56,12 +56,20 @@ const app = express()
 // isSameOrBefore NO NO isSameOrAfter, right???
 // Lets teset
 const thisMoment = require('moment')
+const thirtyAgo = () => thisMoment().subtract(30, 'minutes').format()
+const thirtyAhead = () => thisMoment().add(30, 'minutes').format()
+
 // isSameOrBefore?
 console.log('BEFORE?', thisMoment().isSameOrBefore('2019-06-04 01:30'));
-
-
 // isSameOrAfter?
 console.log('AFTER?', thisMoment().isSameOrAfter('2019-06-04 01:30'));
+
+// change DB time and date to UTC with moment...
+let convertedMoment = thisMoment('2019-06-04 01:30').utc()
+console.log(convertedMoment, 'is +6:00, RIGHT?');
+console.log(thisMoment('2019-06-04 01:30').isBetween(thirtyAgo(), thirtyAhead()));
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))

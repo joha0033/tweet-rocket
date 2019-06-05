@@ -51,23 +51,25 @@ const thenRelease = ({ id, user_id, tweet }) => {
 const checkDBForUnsentTweets = async () =>
   queries.getUnsentTweets() // and populate userId data?
 
-const verifyUnsentTweetsByDate = (tweets) =>
-  tweets.filter(tweet => {
-    console.log('verifyUnsentTweetsByDate recieves tweets (length)', tweets.length);
-    console.log('this momenent', thisMoment().format(), ' is same or before', tweet.scheduled_for, '? ', thisMoment().isSameOrBefore(tweet.scheduled_for));
+const verifyUnsentTweetsByDate = (tweets) => {
+  console.log('verifyUnsentTweetsByDate recieves tweets (length XXX)', tweets.length);
+  return tweets.filter(tweet => {
+    console.log('this momenent', thisMoment().format(), ' is same or after', tweet.scheduled_for, '? ', thisMoment().isSameOrAfter(tweet.scheduled_for));
     return thisMoment().isSameOrAfter(tweet.scheduled_for)
   })
+}
 
 const checkAndVerifyTweetDates = () =>
   checkDBForUnsentTweets().then(tweets => {
-    console.log(tweets.length, 'checkAndVerifyTweetDates => checkDBForUnsentTweets (length)');
-
-    return verifyUnsentTweetsByDate(tweets)
+    console.log(tweets.length, 'checkAndVerifyTweetDates => checkDBForUnsentTweets (length XX)');
+    let verifiedUnsentTweets = verifyUnsentTweetsByDate(tweets)
+    console.log('verifiedUnsentTweets', verifiedUnsentTweets);
+    return verifiedUnsentTweets
   })
 
 const tweetsToSendToday = async () =>
   checkAndVerifyTweetDates().then(tweets => {
-    console.log('This evaluates tweet.scheduled_date === todaysDate in tweetsToSendToday (length)', tweets.length)
+    console.log('This evaluates tweet.scheduled_date === todaysDate in tweetsToSendToday (length XXXX)', tweets)
     return tweets.filter(tweet => {
       const scheduleDateMatches = tweet.scheduled_date === todaysDate
       console.log('tweet.scheduled_date:', tweet.scheduled_date, 'is equal to todaysDate:', todaysDate, '?', 'scheduleDateMatches', scheduleDateMatches);
@@ -79,11 +81,10 @@ const tweetsToSendNow = async () =>
   tweetsToSendToday().then(tweets => {
     console.log('this evaluates if the time scheduled for is +/-30 minutes');
     console.log('can I move thirty_ functions here?');
-
+    console.log('30 minutes ago:', thirtyAgo());
+    console.log('30 minutes ahead:', thirtyAhead());
     return tweets.filter(tweet => {
-      console.log('30 minutes ago:', thirtyAgo());
-      console.log('30 minutes ahead:', thirtyAhead());
-      console.log('thisMoment(tweet.scheduled_for).isBetween(thirtyAgo(), thirtyAhead()) evaluates to:', thisMoment(tweet.scheduled_for).isBetween(thirtyAgo(), thirtyAhead()));
+      console.log('thisMoment(tweet.scheduled_for:', tweet.scheduled_for, ').isBetween(thirtyAgo(), thirtyAhead()) evaluates to:', thisMoment(tweet.scheduled_for).isBetween(thirtyAgo(), thirtyAhead()));
 
       return thisMoment(tweet.scheduled_for)
         .isBetween(thirtyAgo(), thirtyAhead())
