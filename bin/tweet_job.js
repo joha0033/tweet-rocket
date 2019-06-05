@@ -14,14 +14,14 @@ it time is acceptable, send that mofo
 */
 
 const queries = require('../db/queries.js');
-const todaysDate = thisMoment().utc().format('YYYY-MM-DD')
-const thirtyAgo = () => thisMoment().subtract(30, 'minutes').utc()
-const thirtyAhead = () => thisMoment().add(30, 'minutes').utc()
+const todaysDate = thisMoment().subtract({ minutes: thisMoment().utcOffset() }).format('YYYY-MM-DD')
+const thirtyAgo = () => thisMoment().subtract(30, 'minutes').subtract({ minutes: thisMoment().utcOffset() }).format('YYYY-MM-DD kk:mm')
+const thirtyAhead = () => thisMoment().add(30, 'minutes').subtract({ minutes: thisMoment().utcOffset() }).format('YYYY-MM-DD kk:mm')
 
-console.log('findme : job file hit.');
+// console.log('findme : job file hit.');
 
 const createTwit = async (accessKey, accessSecret) => {
-  console.log('ceateTwit called!');
+  // console.log('ceateTwit called!');
 
   return new Twit({
     consumer_key: consumerKey,
@@ -34,16 +34,18 @@ const createTwit = async (accessKey, accessSecret) => {
 }
 
 const thenRelease = ({ id, user_id, tweet }) => {
-  console.log('thenRelease called with user_id:', user_id, 'Tweeting:', tweet);
+  // console.log('thenRelease called with user_id:', user_id, 'Tweeting:', tweet);
 
   return queries.getUsersTwitterAuth(user_id).then(([{ twitter_access_token, twitter_access_secret }]) => {
-    console.log('queries.getUsersTwitterAuth called');
+    // console.log('queries.getUsersTwitterAuth called');
 
     return createTwit(twitter_access_token, twitter_access_secret).then(twit =>
       twit.post('statuses/update', { status: tweet }, async (err, data, response) =>
         queries.updateTweetToSent(id, user_id).then(async sent => sent
-          ? console.log('hey, maybe there\'s success or something about your tweet?')
-          : console.log('maybe there\'s an error?'))))
+          // ? console.log('hey, maybe there\'s success or something about your tweet?')
+          // : console.log('maybe there\'s an error?')
+
+        )))
   })
 }
 
@@ -52,39 +54,39 @@ const checkDBForUnsentTweets = async () =>
   queries.getUnsentTweets() // and populate userId data?
 
 const verifyUnsentTweetsByDate = (tweets) => {
-  console.log('verifyUnsentTweetsByDate recieves tweets (length XXX)', tweets.length);
+  // console.log('verifyUnsentTweetsByDate recieves tweets (length XXX)', tweets.length);
   return tweets.filter(tweet => {
-    console.log('this momenent', thisMoment(), ' is same or after', tweet.scheduled_for, '? ', thisMoment().isSameOrAfter(new Date(tweet.scheduled_for)));
+    // console.log('this momenent', thisMoment(), ' is same or after', tweet.scheduled_for, '? ', thisMoment().isSameOrAfter(new Date(tweet.scheduled_for)));
     return thisMoment().isSameOrAfter(new Date(tweet.scheduled_for))
   })
 }
 
 const checkAndVerifyTweetDates = () =>
   checkDBForUnsentTweets().then(tweets => {
-    console.log(tweets.length, 'checkAndVerifyTweetDates => checkDBForUnsentTweets (length XX)');
+    // console.log(tweets.length, 'checkAndVerifyTweetDates => checkDBForUnsentTweets (length XX)');
     let verifiedUnsentTweets = verifyUnsentTweetsByDate(tweets)
-    console.log('verifiedUnsentTweets', verifiedUnsentTweets);
+    // console.log('verifiedUnsentTweets', verifiedUnsentTweets);
     return verifiedUnsentTweets
   })
 
 const tweetsToSendToday = async () =>
   checkAndVerifyTweetDates().then(tweets => {
-    console.log('This evaluates tweet.scheduled_date === todaysDate in tweetsToSendToday (length XXXX)', tweets)
+    // console.log('This evaluates tweet.scheduled_date === todaysDate in tweetsToSendToday (length XXXX)', tweets)
     return tweets.filter(tweet => {
       const scheduleDateMatches = tweet.scheduled_date === todaysDate
-      console.log('tweet.scheduled_date:', thisMoment(new Date(tweet.scheduled_date)).utc(), 'is equal to todaysDate:', todaysDate, '?', 'scheduleDateMatches', scheduleDateMatches);
+      // console.log('tweet.scheduled_date:', thisMoment(new Date(tweet.scheduled_date)).utc(), 'is equal to todaysDate:', todaysDate, '?', 'scheduleDateMatches', scheduleDateMatches);
       return scheduleDateMatches
     })
   })
 
 const tweetsToSendNow = async () =>
   tweetsToSendToday().then(tweets => {
-    console.log('this evaluates if the time scheduled for is +/-30 minutes');
-    console.log('can I move thirty_ functions here?');
-    console.log('30 minutes ago:', thirtyAgo());
-    console.log('30 minutes ahead:', thirtyAhead());
+    // console.log('this evaluates if the time scheduled for is +/-30 minutes');
+    // console.log('can I move thirty_ functions here?');
+    // console.log('30 minutes ago:', thirtyAgo());
+    // console.log('30 minutes ahead:', thirtyAhead());
     return tweets.filter(tweet => {
-      console.log('thisMoment(tweet.scheduled_for:', thisMoment(tweet.scheduled_for).utc().format('YYYY-MM_DD kk:mm'), ').isBetween(thirtyAgo(), thirtyAhead()) evaluates to:', thisMoment(tweet.scheduled_for).isBetween(thirtyAgo(), thirtyAhead()));
+      // console.log('thisMoment(tweet.scheduled_for:', thisMoment(tweet.scheduled_for).utc().format('YYYY-MM_DD kk:mm'), ').isBetween(thirtyAgo(), thirtyAhead()) evaluates to:', thisMoment(tweet.scheduled_for).isBetween(thirtyAgo(), thirtyAhead()));
 
       return thisMoment(tweet.scheduled_for).utc()
         .isBetween(thirtyAgo(), thirtyAhead())
@@ -93,7 +95,7 @@ const tweetsToSendNow = async () =>
 
 const sendTweetsScheduledForNow = () =>
   tweetsToSendNow().then((tweets) => {
-    console.log('The tweets that made the cut!\nInside sendTweetsScheduledForNow:', tweets);
+    // console.log('The tweets that made the cut!\nInside sendTweetsScheduledForNow:', tweets);
 
     tweets.map(tweet =>
       thenRelease(tweet))
@@ -124,10 +126,10 @@ module.exports = {
 //     // tweet should have id
 //     queries.updateTweetToSent()
 //     // handle errors
-//     // console.log(data, 'data')
+    // console.log(data, 'data')
 //     // return data
-//     // console.log(response, 'response')
-//     // console.log(err, 'err')
+    // console.log(response, 'response')
+    // console.log(err, 'err')
 //   })
 // }
 
@@ -146,7 +148,7 @@ module.exports = {
   //   })
   // })
   // .catch((err) => {
-  //   console.log(err);
+    //  // console.log(err);
   // });
 
   // const getApplicableTweets = (tweets) => {

@@ -59,8 +59,8 @@ const thisMoment = require('moment')
 let date = new Date('2019-06-04 01:30')
 console.log(date);
 
-const thirtyAgo = () => thisMoment().subtract(30, 'minutes').format()
-const thirtyAhead = () => thisMoment().add(30, 'minutes').format()
+// const thirtyAgo = () => thisMoment().subtract(30, 'minutes').format()
+// const thirtyAhead = () => thisMoment().add(30, 'minutes').format()
 
 // isSameOrBefore?
 console.log('BEFORE?', thisMoment().isSameOrBefore('2019-06-04 01:30'));
@@ -70,7 +70,17 @@ console.log('AFTER?', thisMoment().isSameOrAfter('2019-06-04 01:30'));
 // change DB time and date to UTC with moment...
 let convertedMoment = thisMoment('2019-06-04 01:30').utc()
 console.log(convertedMoment, 'is +6:00, RIGHT?');
-console.log(thisMoment('2019-06-04 01:30').isBetween(thirtyAgo(), thirtyAhead()));
+// console.log(thisMoment('2019-06-04 01:30').isBetween(thirtyAgo(), thirtyAhead()));
+
+// I NEED 30 MINuTES UTC TO GO TO DENVER TIME
+const thirtyAgo = () => thisMoment().subtract(30, 'minutes').utc()
+const thirtyAhead = () => thisMoment().add(30, 'minutes').utc()
+const theOffset = thisMoment().utcOffset()
+console.log(theOffset / 60);
+
+console.log(thirtyAgo().subtract({ minutes: thisMoment().utcOffset() }).format('YYYY-MM-DD'));
+console.log(thirtyAhead().subtract({ minutes: thisMoment().utcOffset() }));
+
 
 
 
