@@ -35,7 +35,7 @@ module.exports = {
     return knex('tweets').insert(tweet).returning('*');
   },
   getUnsentTweets() {
-    console.log('getUnsentTweets - Q ');
+    console.log('getUnsentTweets - Q - v2 ');
     return knex('tweets')
       .where('sent', false)
       .returning('*');
