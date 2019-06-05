@@ -55,7 +55,7 @@ const verifyUnsentTweetsByDate = (tweets) =>
   tweets.filter(tweet => {
     console.log('verifyUnsentTweetsByDate recieves tweets (length)', tweets.length);
     console.log('this momenent', thisMoment().format(), ' is same or before', tweet.scheduled_for, '? ', thisMoment().isSameOrBefore(tweet.scheduled_for));
-    return thisMoment().isSameOrBefore(tweet.scheduled_for)
+    return thisMoment().isSameOrAfter(tweet.scheduled_for)
   })
 
 const checkAndVerifyTweetDates = () =>

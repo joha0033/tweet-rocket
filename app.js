@@ -28,6 +28,7 @@ const queries = require('./db/queries.js')
 const tweets = require('./api/tweets')
 const users = require('./api/users')
 
+
 // DATABASE STUFF
 // const { Client } = require('pg');
 
@@ -49,6 +50,18 @@ const app = express()
 //   }
 //   client.end();
 // });
+
+// MOMENT TESTS
+// 2019-06-04 01:30
+// isSameOrBefore NO NO isSameOrAfter, right???
+// Lets teset
+const thisMoment = require('moment')
+// isSameOrBefore?
+console.log('BEFORE?', thisMoment().isSameOrBefore('2019-06-04 01:30'));
+
+
+// isSameOrAfter?
+console.log('AFTER?', thisMoment().isSameOrAfter('2019-06-04 01:30'));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))
