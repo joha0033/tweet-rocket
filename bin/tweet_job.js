@@ -14,9 +14,9 @@ it time is acceptable, send that mofo
 */
 
 const queries = require('../db/queries.js');
-const todaysDate = thisMoment().format('YYYY-MM-DD')
-const thirtyAgo = () => thisMoment().subtract(30, 'minutes').format()
-const thirtyAhead = () => thisMoment().add(30, 'minutes').format()
+const todaysDate = thisMoment().utc().format('YYYY-MM-DD')
+const thirtyAgo = () => thisMoment().subtract(30, 'minutes').utc()
+const thirtyAhead = () => thisMoment().add(30, 'minutes').utc()
 
 console.log('findme : job file hit.');
 
@@ -54,8 +54,8 @@ const checkDBForUnsentTweets = async () =>
 const verifyUnsentTweetsByDate = (tweets) => {
   console.log('verifyUnsentTweetsByDate recieves tweets (length XXX)', tweets.length);
   return tweets.filter(tweet => {
-    console.log('this momenent', thisMoment().format(), ' is same or after', tweet.scheduled_for, '? ', thisMoment().isSameOrAfter(tweet.scheduled_for));
-    return thisMoment().isSameOrAfter(tweet.scheduled_for)
+    console.log('this momenent', thisMoment().utc(), ' is same or after', tweet.scheduled_for, '? ', thisMoment().isSameOrAfter(tweet.scheduled_for));
+    return thisMoment().utc().isSameOrAfter(tweet.scheduled_for)
   })
 }
 
@@ -84,9 +84,9 @@ const tweetsToSendNow = async () =>
     console.log('30 minutes ago:', thirtyAgo());
     console.log('30 minutes ahead:', thirtyAhead());
     return tweets.filter(tweet => {
-      console.log('thisMoment(tweet.scheduled_for:', tweet.scheduled_for, ').isBetween(thirtyAgo(), thirtyAhead()) evaluates to:', thisMoment(tweet.scheduled_for).isBetween(thirtyAgo(), thirtyAhead()));
+      console.log('thisMoment(tweet.scheduled_for:', thisMoment(tweet.scheduled_for).utc().format('YYYY-MM_DD kk:mm'), ').isBetween(thirtyAgo(), thirtyAhead()) evaluates to:', thisMoment(tweet.scheduled_for).isBetween(thirtyAgo(), thirtyAhead()));
 
-      return thisMoment(tweet.scheduled_for)
+      return thisMoment(tweet.scheduled_for).utc()
         .isBetween(thirtyAgo(), thirtyAhead())
     })
   })
