@@ -30,9 +30,7 @@ module.exports = {
     // DO CONVERSION IN "ON SAVE" IN DATABASE
     tweet = {
       ...tweet,
-      scheduled_date: thisMoment(tweet.scheduled_date).utc(),
-      scheduled_time: thisMoment(tweet.scheduled_time).utc(),
-      scheduled_for: tweet.thisMoment(tweet.scheduled_date).utc() + " " + thisMoment(tweet.scheduled_time).utc()
+      scheduled_for: thisMoment(tweet.scheduled_date).utc() + " " + thisMoment(tweet.scheduled_time).utc()
     }
     let savedTweet = knex('tweets').insert(tweet).returning('*');
     return knex('tweets').insert(tweet).returning('*');
