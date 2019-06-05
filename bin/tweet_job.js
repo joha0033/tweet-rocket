@@ -14,9 +14,9 @@ it time is acceptable, send that mofo
 */
 
 const queries = require('../db/queries.js');
-const todaysDate = thisMoment().subtract({ minutes: thisMoment().utcOffset() }).format('YYYY-MM-DD')
-const thirtyAgo = () => thisMoment().subtract(30, 'minutes').subtract({ minutes: thisMoment().utcOffset() }).format('YYYY-MM-DD kk:mm')
-const thirtyAhead = () => thisMoment().add(30, 'minutes').subtract({ minutes: thisMoment().utcOffset() }).format('YYYY-MM-DD kk:mm')
+const todaysDate = thisMoment().utc().format('YYYY-MM-DD')
+const thirtyAgo = () => thisMoment().subtract(30, 'minutes')
+const thirtyAhead = () => thisMoment().add(30, 'minutes')
 
 // console.log('findme : job file hit.');
 
@@ -43,8 +43,7 @@ const thenRelease = ({ id, user_id, tweet }) => {
       twit.post('statuses/update', { status: tweet }, async (err, data, response) =>
         queries.updateTweetToSent(id, user_id).then(async sent => sent
           // ? console.log('hey, maybe there\'s success or something about your tweet?')
-          // : console.log('maybe there\'s an error?')
-
+          // : console.log('maybe there\'s an error?'))
         )))
   })
 }
