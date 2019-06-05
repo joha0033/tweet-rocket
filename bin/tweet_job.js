@@ -34,7 +34,7 @@ const createTwit = async (accessKey, accessSecret) => {
 }
 
 const thenRelease = ({ id, user_id, tweet }) => {
-  console.log('thenRelease called');
+  console.log('thenRelease called with user_id:', user_id, 'Tweeting:', tweet);
 
   return queries.getUsersTwitterAuth(user_id).then(([{ twitter_access_token, twitter_access_secret }]) => {
     console.log('queries.getUsersTwitterAuth called');
@@ -53,7 +53,7 @@ const checkDBForUnsentTweets = async () =>
 
 const verifyUnsentTweetsByDate = (tweets) =>
   tweets.filter(tweet => {
-    console.log('verifyUnsentTweetsByDate recieves tweets (length)', tweets.length());
+    console.log('verifyUnsentTweetsByDate recieves tweets (length)', tweets.length);
     console.log('this momenent', thisMoment().format(), ' is same or before', tweet.scheduled_for, '? ', thisMoment().isSameOrBefore(tweet.scheduled_for));
     return thisMoment().isSameOrBefore(tweet.scheduled_for)
   })
@@ -67,7 +67,7 @@ const checkAndVerifyTweetDates = () =>
 
 const tweetsToSendToday = async () =>
   checkAndVerifyTweetDates().then(tweets => {
-    console.log('This evaluates tweet.scheduled_date === todaysDate in tweetsToSendToday')
+    console.log('This evaluates tweet.scheduled_date === todaysDate in tweetsToSendToday (length)', tweets.length)
     return tweets.filter(tweet => {
       const scheduleDateMatches = tweet.scheduled_date === todaysDate
       console.log('tweet.scheduled_date:', tweet.scheduled_date, 'is equal to todaysDate:', todaysDate, '?', 'scheduleDateMatches', scheduleDateMatches);
