@@ -64,9 +64,15 @@ let tweet = {}
 const standardUTCDate = '2019-06-07'
 // should be equal to...
 // 6/6/19 - 19:30pm at night
-tweet.scheduled_for = '2019-06-06 15:20'
-console.log(tweet.scheduled_for, 'converted?');
+tweet.scheduled_for = '2019-06-06 15:45'
+console.log(tweet.scheduled_for, 'meme?');
+console.log(thisMoment(tweet.scheduled_for).utc().format('YYYY-MM-DD kk:mm'), 'is between', thirtyAgo(), 'and', thirtyAhead());
 
+console.log(thisMoment(thisMoment(tweet.scheduled_for).utc().format('YYYY-MM-DD kk:mm'))
+  .isBetween(thirtyAgo(), thirtyAhead()));
+
+// thisMoment(thisMoment(tweet.scheduled_for).utc().format('YYYY-MM-DD kk:mm'))
+//   .isBetween(thirtyAgo(), thirtyAhead())
 // let savedDateAndTimeToUTC = thisMoment(mountainUTCDate).utc().format('YYYY-MM-DD')
 // const converted = thisMoment(tweet.scheduled_for).utc().format('YYYY-MM-DD kk:mm')
 // console.log(savedDateAndTimeToUTC, 'is equal to', standardUTCDate, '?', savedDateAndTimeToUTC === standardUTCDate);

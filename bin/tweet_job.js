@@ -64,7 +64,7 @@ const checkAndVerifyTweetDates = () =>
   checkDBForUnsentTweets().then(tweets => {
     console.log(tweets.length, 'checkAndVerifyTweetDates => checkDBForUnsentTweets (length XX)');
     let verifiedUnsentTweets = verifyUnsentTweetsByDate(tweets)
-    console.log('verifiedUnsentTweets', verifiedUnsentTweets);
+    // console.log('verifiedUnsentTweets', verifiedUnsentTweets);
     return verifiedUnsentTweets
   })
 
@@ -73,8 +73,11 @@ const tweetsToSendToday = async () =>
     console.log('This evaluates tweet.scheduled_date === todaysDate in tweetsToSendToday (length)', tweets)
     return tweets.filter(tweet => {
       const scheduledForConvertedToUTCDate = thisMoment(tweet.scheduled_for).utc().format('YYYY-MM-DD')
+      tweet = { ...tweet, scheduled_for: thisMoment(tweet.scheduled_for).utc().format('YYYY-MM-DD kk:mm') }
+      console.log(tweet.scheduled_for, 'converted here?!?! in tweetsToSendToday');
+
       const scheduleDateMatches = scheduledForConvertedToUTCDate === todaysDate
-      console.log('scheduledForConvertedToUTCDate:', scheduledForConvertedToUTCDate, 'is equal to todaysDate:', todaysDate, '?', 'scheduleDateMatches', scheduleDateMatches);
+      // console.log('scheduledForConvertedToUTCDate:', scheduledForConvertedToUTCDate, 'is equal to todaysDate:', todaysDate, '?', 'scheduleDateMatches', scheduleDateMatches);
       return scheduleDateMatches
     })
   })
@@ -87,7 +90,10 @@ const tweetsToSendNow = async () =>
     console.log('30 minutes ahead:', thirtyAhead());
     return tweets.filter(tweet => {
       // convert scheduled_for to
-      console.log('thisMoment(tweet.scheduled_for:', thisMoment(tweet.scheduled_for).utc().format('YYYY-MM-DD kk:mm'), ').isBetween(thirtyAgo(), thirtyAhead()) evaluates to:', thisMoment(thisMoment(tweet.scheduled_for).utc().format('YYYY-MM-DD kk:mm')).isBetween(thirtyAgo(), thirtyAhead()));
+      // const convertedToUTC = thisMoment(tweet.scheduled_for).utc().format('YYYY-MM-DD kk:mm')
+      console.log(tweet.scheduled_for, '<== SCHEDULED FOR in UTC??');
+
+      // console.log('thisMoment(tweet.scheduled_for:', tweet.scheduled_for, ').isBetween(thirtyAgo(), thirtyAhead()) evaluates to:', thisMoment(tweet.scheduled_for).isBetween(thirtyAgo(), thirtyAhead()));
 
       return thisMoment(thisMoment(tweet.scheduled_for).utc().format('YYYY-MM-DD kk:mm'))
         .isBetween(thirtyAgo(), thirtyAhead())
@@ -96,7 +102,7 @@ const tweetsToSendNow = async () =>
 
 const sendTweetsScheduledForNow = () =>
   tweetsToSendNow().then((tweets) => {
-    console.log('The tweets that made the cut!\nInside sendTweetsScheduledForNow:', tweets);
+    // console.log('The tweets that made the cut!\nInside sendTweetsScheduledForNow:', tweets);
 
     tweets.map(tweet =>
       thenRelease(tweet))
