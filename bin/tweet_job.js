@@ -73,8 +73,8 @@ const tweetsToSendToday = async () =>
     console.log('This evaluates tweet.scheduled_date === todaysDate in tweetsToSendToday (length)', tweets)
     return tweets.filter((tweet) => {
       const scheduledForConvertedToUTCDate = thisMoment(tweet.scheduled_for).utc().format('YYYY-MM-DD')
-      tweet = { ...tweet, scheduled_for_utc: thisMoment(tweet.scheduled_for).utc().format('YYYY-MM-DD kk:mm') }
-      console.log(tweet.scheduled_for_utc_utc, 'converted here?!?! in tweetsToSendToday');
+      tweet.scheduled_for_utc = thisMoment(tweet.scheduled_for).utc().format('YYYY-MM-DD kk:mm');
+      console.log(tweet.scheduled_for_utc, 'converted here?!?! in tweetsToSendToday');
 
       const scheduleDateMatches = scheduledForConvertedToUTCDate === todaysDate
       // console.log('scheduledForConvertedToUTCDate:', scheduledForConvertedToUTCDate, 'is equal to todaysDate:', todaysDate, '?', 'scheduleDateMatches', scheduleDateMatches);
