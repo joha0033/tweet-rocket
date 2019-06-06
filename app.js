@@ -64,9 +64,12 @@ let tweet = {}
 const standardUTCDate = '2019-06-07'
 // should be equal to...
 // 6/6/19 - 19:30pm at night
-const mountainUTCDate = '2019-06-06 19:30'
-let savedDateAndTimeToUTC = thisMoment(mountainUTCDate).utc().format('YYYY-MM-DD')
-console.log(savedDateAndTimeToUTC, 'is equal to', standardUTCDate, '?', savedDateAndTimeToUTC === standardUTCDate);
+tweet.scheduled_for = '2019-06-06 15:20'
+console.log(tweet.scheduled_for, 'converted?');
+
+// let savedDateAndTimeToUTC = thisMoment(mountainUTCDate).utc().format('YYYY-MM-DD')
+// const converted = thisMoment(tweet.scheduled_for).utc().format('YYYY-MM-DD kk:mm')
+// console.log(savedDateAndTimeToUTC, 'is equal to', standardUTCDate, '?', savedDateAndTimeToUTC === standardUTCDate);
 
 
 
