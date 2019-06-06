@@ -4,6 +4,7 @@ const thisMoment = require('moment')
 
 const consumerKey = process.env.TWITTER_CONSUMER_KEY
 const consumerSecret = process.env.TWITTER_CONSUMER_SECRET
+console.log('this is updated...');
 
 /*
 check db to find tweets that have not been sent
@@ -15,8 +16,8 @@ it time is acceptable, send that mofo
 
 const queries = require('../db/queries.js');
 const todaysDate = thisMoment().utc().format('YYYY-MM-DD')
-const thirtyAgo = () => thisMoment().subtract(30, 'minutes').utc()
-const thirtyAhead = () => thisMoment().add(30, 'minutes').utc()
+const thirtyAgo = () => thisMoment().utc().subtract(30, 'minutes').format('YYYY-MM-DD kk:mm')
+const thirtyAhead = () => thisMoment().utc().add(30, 'minutes').format('YYYY-MM-DD kk:mm')
 
 console.log('findme : job file hit.');
 
@@ -86,7 +87,7 @@ const tweetsToSendNow = async () =>
     console.log('30 minutes ahead:', thirtyAhead());
     return tweets.filter(tweet => {
       // convert scheduled_for to
-      console.log('thisMoment(tweet.scheduled_for:', thisMoment(tweet.scheduled_for).utc().format('YYYY-MM-DD kk:mm'), ').isBetween(thirtyAgo(), thirtyAhead()) evaluates to:', thisMoment(tweet.scheduled_for).isBetween(thirtyAgo(), thirtyAhead()));
+      console.log('thisMoment(tweet.scheduled_for:', thisMoment(tweet.scheduled_for).utc().format('YYYY-MM-DD kk:mm'), ').isBetween(thirtyAgo(), thirtyAhead()) evaluates to:', thisMoment(thisMoment(tweet.scheduled_for).utc().format('YYYY-MM-DD kk:mm')).isBetween(thirtyAgo(), thirtyAhead()));
 
       return thisMoment(thisMoment(tweet.scheduled_for).utc().format('YYYY-MM-DD kk:mm'))
         .isBetween(thirtyAgo(), thirtyAhead())
