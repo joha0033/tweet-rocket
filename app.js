@@ -54,32 +54,29 @@ const app = express()
 // MOMENT TESTS
 // 2019-06-04 01:30
 // isSameOrBefore NO NO isSameOrAfter, right???
-// Lets teset
-// const thisMoment = require('moment')
-// let date = new Date('2019-06-04 01:30')
-// console.log(date);
+// Lets test
+const thisMoment = require('moment')
+const todaysDate = thisMoment().utc().format('YYYY-MM-DD')
+const thirtyAgo = () => thisMoment().utc().subtract(30, 'minutes').format('YYYY-MM-DD kk:mm')
+const thirtyAhead = () => thisMoment().utc().add(30, 'minutes').format('YYYY-MM-DD kk:mm')
+let tweet = {}
+// 6/7/19 - 1:30am in the morning
+const standardUTCDate = '2019-06-07'
+// should be equal to...
+// 6/6/19 - 19:30pm at night
+const mountainUTCDate = '2019-06-06 19:30'
+let savedDateAndTimeToUTC = thisMoment(mountainUTCDate).utc().format('YYYY-MM-DD')
+console.log(savedDateAndTimeToUTC, 'is equal to', standardUTCDate, '?', savedDateAndTimeToUTC === standardUTCDate);
 
-// // const thirtyAgo = () => thisMoment().subtract(30, 'minutes').format()
-// // const thirtyAhead = () => thisMoment().add(30, 'minutes').format()
 
-// // isSameOrBefore?
-// console.log('BEFORE?', thisMoment().isSameOrBefore('2019-06-04 01:30'));
-// // isSameOrAfter?
-// console.log('AFTER?', thisMoment().isSameOrAfter('2019-06-04 01:30'));
 
-// // change DB time and date to UTC with moment...
-// let convertedMoment = thisMoment('2019-06-04 01:30').utc()
-// console.log(convertedMoment, 'is +6:00, RIGHT?');
-// // console.log(thisMoment('2019-06-04 01:30').isBetween(thirtyAgo(), thirtyAhead()));
+// tweet.scheduled_for = '2019-06-06 1:25'
+// tweet.scheduled_for_utc = thisMoment(tweet.scheduled_for).utc().format('YYYY-MM-DD kk:mm')
 
-// // I NEED 30 MINuTES UTC TO GO TO DENVER TIME
-// const thirtyAgo = () => thisMoment().subtract(30, 'minutes').utc()
-// const thirtyAhead = () => thisMoment().add(30, 'minutes').utc()
-// const theOffset = thisMoment().utcOffset()
-// console.log(theOffset / 60);
+// const compared = thisMoment(tweet.scheduled_for).isBetween(thirtyAgo(), thirtyAhead())
 
-// console.log(thirtyAgo().subtract({ minutes: thisMoment().utcOffset() }).format('YYYY-MM-DD'));
-// console.log(thirtyAhead().subtract({ minutes: thisMoment().utcOffset() }));
+// console.log('on', todaysDate, ', is ', tweet.scheduled_for_utc, 'between', thirtyAgo(), 'and', thirtyAhead(), '?', compared, 'converted?');
+
 
 
 

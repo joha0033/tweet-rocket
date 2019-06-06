@@ -69,10 +69,11 @@ const checkAndVerifyTweetDates = () =>
 
 const tweetsToSendToday = async () =>
   checkAndVerifyTweetDates().then(tweets => {
-    console.log('This evaluates tweet.scheduled_date === todaysDate in tweetsToSendToday (length XXXX)', tweets)
+    console.log('This evaluates tweet.scheduled_date === todaysDate in tweetsToSendToday (length)', tweets)
     return tweets.filter(tweet => {
-      const scheduleDateMatches = tweet.scheduled_date === todaysDate
-      console.log('tweet.scheduled_date:', tweet.scheduled_date, 'is equal to todaysDate:', todaysDate, '?', 'scheduleDateMatches', scheduleDateMatches);
+      const scheduledForConvertedToUTCDate = thisMoment(tweet.scheduled_for).utc().format('YYYY-MM-DD')
+      const scheduleDateMatches = scheduledForConvertedToUTCDate === todaysDate
+      console.log('scheduledForConvertedToUTCDate:', scheduledForConvertedToUTCDate, 'is equal to todaysDate:', todaysDate, '?', 'scheduleDateMatches', scheduleDateMatches);
       return scheduleDateMatches
     })
   })
@@ -84,9 +85,10 @@ const tweetsToSendNow = async () =>
     console.log('30 minutes ago:', thirtyAgo());
     console.log('30 minutes ahead:', thirtyAhead());
     return tweets.filter(tweet => {
-      console.log('thisMoment(tweet.scheduled_for:', thisMoment(tweet.scheduled_for).utc().format('YYYY-MM_DD kk:mm'), ').isBetween(thirtyAgo(), thirtyAhead()) evaluates to:', thisMoment(tweet.scheduled_for).isBetween(thirtyAgo(), thirtyAhead()));
+      // convert scheduled_for to
+      console.log('thisMoment(tweet.scheduled_for:', thisMoment(tweet.scheduled_for).utc().format('YYYY-MM-DD kk:mm'), ').isBetween(thirtyAgo(), thirtyAhead()) evaluates to:', thisMoment(tweet.scheduled_for).isBetween(thirtyAgo(), thirtyAhead()));
 
-      return thisMoment(tweet.scheduled_for).utc()
+      return thisMoment(thisMoment(tweet.scheduled_for).utc().format('YYYY-MM-DD kk:mm'))
         .isBetween(thirtyAgo(), thirtyAhead())
     })
   })
