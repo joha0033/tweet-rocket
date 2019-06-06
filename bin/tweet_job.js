@@ -69,12 +69,12 @@ const checkAndVerifyTweetDates = () =>
   })
 
 const tweetsToSendToday = async () =>
-  checkAndVerifyTweetDates().then(tweets => {
+  checkAndVerifyTweetDates().then((tweets) => {
     console.log('This evaluates tweet.scheduled_date === todaysDate in tweetsToSendToday (length)', tweets)
-    return tweets.filter(tweet => {
+    return tweets.filter((tweet) => {
       const scheduledForConvertedToUTCDate = thisMoment(tweet.scheduled_for).utc().format('YYYY-MM-DD')
-      tweet = { ...tweet, scheduled_for: thisMoment(tweet.scheduled_for).utc().format('YYYY-MM-DD kk:mm') }
-      console.log(tweet.scheduled_for, 'converted here?!?! in tweetsToSendToday');
+      tweet = { ...tweet, scheduled_for_utc: thisMoment(tweet.scheduled_for).utc().format('YYYY-MM-DD kk:mm') }
+      console.log(tweet.scheduled_for_utc_utc, 'converted here?!?! in tweetsToSendToday');
 
       const scheduleDateMatches = scheduledForConvertedToUTCDate === todaysDate
       // console.log('scheduledForConvertedToUTCDate:', scheduledForConvertedToUTCDate, 'is equal to todaysDate:', todaysDate, '?', 'scheduleDateMatches', scheduleDateMatches);
@@ -89,13 +89,13 @@ const tweetsToSendNow = async () =>
     console.log('30 minutes ago:', thirtyAgo());
     console.log('30 minutes ahead:', thirtyAhead());
     return tweets.filter(tweet => {
-      // convert scheduled_for to
-      // const convertedToUTC = thisMoment(tweet.scheduled_for).utc().format('YYYY-MM-DD kk:mm')
-      console.log(tweet.scheduled_for, '<== SCHEDULED FOR in UTC??');
+      // convert scheduled_for_utc to
+      // const convertedToUTC = thisMoment(tweet.scheduled_for_utc).utc().format('YYYY-MM-DD kk:mm')
+      console.log(tweet.scheduled_for_utc, '<== SCHEDULED FOR in UTC??');
 
-      // console.log('thisMoment(tweet.scheduled_for:', tweet.scheduled_for, ').isBetween(thirtyAgo(), thirtyAhead()) evaluates to:', thisMoment(tweet.scheduled_for).isBetween(thirtyAgo(), thirtyAhead()));
+      // console.log('thisMoment(tweet.scheduled_for_utc:', tweet.scheduled_for_utc, ').isBetween(thirtyAgo(), thirtyAhead()) evaluates to:', thisMoment(tweet.scheduled_for_utc).isBetween(thirtyAgo(), thirtyAhead()));
 
-      return thisMoment(thisMoment(tweet.scheduled_for).utc().format('YYYY-MM-DD kk:mm'))
+      return thisMoment(thisMoment(tweet.scheduled_for_utc).utc().format('YYYY-MM-DD kk:mm'))
         .isBetween(thirtyAgo(), thirtyAhead())
     })
   })
