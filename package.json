@@ -23,7 +23,7 @@
     "express": "~4.15.2",
     "express-session": "^1.16.1",
     "jade": "~1.11.0",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "knex": "^0.16.5",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.25",
